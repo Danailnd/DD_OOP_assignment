@@ -2,14 +2,14 @@ import java.util.List;
 import java.util.UUID;
 
 //Дисциплина
-public class Course {
+public class Subject {
 
     private final UUID id;
     private String name;
     private boolean isMandatory;
     private List<Integer> availableYears;
 
-    public Course(String name, boolean isMandatory, List<Integer> availableYears) {
+    public Subject(String name, boolean isMandatory, List<Integer> availableYears) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.isMandatory = isMandatory;

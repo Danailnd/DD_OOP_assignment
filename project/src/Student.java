@@ -6,23 +6,12 @@ public class Student {
     private String name;
     private String facultyNumber;
     private int course;
-    private String specialty;
+    private Specialty specialty;
     private int group;
     private StudentStatus status;
     private double averageGrade;
 
-    public Student(UUID id, String name, String facultyNumber, int course, String specialty, int group, StudentStatus status, double averageGrade) {
-        this.id = id;
-        this.name = name;
-        this.facultyNumber = facultyNumber;
-        this.course = course;
-        this.specialty = specialty;
-        this.group = group;
-        this.status = status;
-        this.averageGrade = averageGrade;
-    }
-
-    public Student( String name, String facultyNumber, int course, String specialty, int group, StudentStatus status, double averageGrade) {
+    public Student( String name, String facultyNumber, int course, Specialty specialty, int group, StudentStatus status, double averageGrade) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.facultyNumber = facultyNumber;
@@ -32,7 +21,6 @@ public class Student {
         this.status = status;
         this.averageGrade = averageGrade;
     }
-
 
 //    getters and setters
 
@@ -51,7 +39,7 @@ public class Student {
         return course;
     }
 
-    public String getSpecialty() {
+    public Specialty getSpecialty() {
         return specialty;
     }
 
@@ -79,7 +67,7 @@ public class Student {
         this.course = course;
     }
 
-    public void setSpecialty(String specialty) {
+    public void setSpecialty(Specialty specialty) {
         this.specialty = specialty;
     }
 

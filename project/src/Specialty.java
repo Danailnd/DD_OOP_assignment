@@ -6,7 +6,7 @@ public class Specialty {
     private final UUID id;
 
     private String name;
-    private final List<Course> courses;
+    private final List<Subject> courses;
 
     public Specialty(String name) {
         this.id = UUID.randomUUID();
@@ -14,12 +14,12 @@ public class Specialty {
         this.courses = new ArrayList<>();
     }
 
-    public void addCourse(Course course) {
+    public void addCourse(Subject course) {
         courses.add(course);
     }
-    public List<Course> getCoursesForYear(int year) {
-        List<Course> result = new ArrayList<>();
-        for (Course course : courses) {
+    public List<Subject> getCoursesForYear(int year) {
+        List<Subject> result = new ArrayList<>();
+        for (Subject course : courses) {
             if (course.isAvailableForYear(year)) {
                 result.add(course);
             }
@@ -35,7 +35,7 @@ public class Specialty {
         return name;
     }
 
-    public List<Course> getCourses() {
+    public List<Subject> getCourses() {
         return courses;
     }
 
