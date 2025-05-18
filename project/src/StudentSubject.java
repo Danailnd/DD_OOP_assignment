@@ -5,14 +5,12 @@ public class StudentSubject {
     private Student student;
     private Subject subject;
     private float grade;
-    private boolean isCompleted;
 
-    public StudentSubject(Student student, Subject subject, float grade, boolean isCompleted){
+    public StudentSubject(Student student, Subject subject, float grade){
         this.id = UUID.randomUUID();
         this.student = student;
         this.subject = subject;
         this.grade = grade;
-        this.isCompleted = isCompleted;
     }
 
     // Getters
@@ -32,9 +30,6 @@ public class StudentSubject {
         return grade;
     }
 
-    public boolean isCompleted() {
-        return isCompleted;
-    }
 
     // Setters
     public void setStudent(Student student) {
@@ -48,9 +43,4 @@ public class StudentSubject {
     public void setGrade(float grade) {
         this.grade = grade;
     }
-
-    public void setCompleted(boolean isCompleted){
-        this.isCompleted = isCompleted;
-    }
-
 }
