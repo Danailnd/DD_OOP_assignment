@@ -3,12 +3,13 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-
-    private static List<Student> students = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
     private static boolean running = true;
-
     private static String filePath = null;
+    private static String specialitesFilePath = null;
+    private static String studentsFilePath = null;
+    private static List<Student> students = new ArrayList<>();
+    private static List<Specialty> specialties = new ArrayList<>();
 
     public static void main(String[] args) {
         while (running) {
@@ -38,12 +39,63 @@ public class Main {
             default: System.out.println("Невалидна команда. Избери число от 1–9.");
         }
     }
+
     private static void openFile() {
-        System.out.print("Път на файла: ");
-        filePath = scanner.nextLine().trim();
-        // TODO:
-        System.out.println("Отваря се файл: " + filePath);
+        System.out.print("Път на файл с специалности: ");
+        specialitesFilePath = scanner.nextLine().trim();
+        List<Specialty> loaded = JsonDeserializeHelper.loadSpecialtiesFromFile(specialitesFilePath);
+        if (loaded == null) {
+            System.out.println("Неуспешно зареждане на специалности.");
+        } else {
+            specialties = loaded;
+            System.out.println("Успешно заредени " + specialties.size() + " специалности.");
+        }
+        System.out.print("Път на файл със студенти: ");
+        studentsFilePath = scanner.nextLine().trim();
+        List<Student> loadedStudents = JsonDeserializeHelper.loadStudentsFromFile(studentsFilePath, specialties);
+
+        if (loadedStudents == null) {
+            System.out.println("Неуспешно зареждан1е на студенти.");
+        } else {
+            students = loadedStudents;
+            System.out.println("Успешно заредени " + students.size() + " студенти.");
+        }
     }
+
+    private static void displaySpecialties(){
+        if(specialties.isEmpty()){
+            System.out.println("Няма заредени специалности.");
+            return;
+        }
+        System.out.println("Списък на специалностите:");
+        for (Specialty sp : specialties) {
+            System.out.println("- " + sp.getName());
+            for (Subject subject : sp.getCourses()) {
+                System.out.printf("  * %s (Задължителен: %b, Възможни курсове: %s)%n",
+                        subject.getName(), subject.isMandatory(), subject.getAvailableYears());
+            }
+        }
+    }
+
+    private static void displayStudents() {
+        if (students.isEmpty()) {
+            System.out.println("Няма заредени студенти.");
+            return;
+        }
+        System.out.println("Списък на студентите:");
+        for (Student s : students) {
+            System.out.printf("- Име: %s | Факултетен номер: %s | Специалност: %s | Курс: %d | Група: %d | Статус: %s | Среден успех: %.2f%n",
+                    s.getName(),
+                    s.getFacultyNumber(),
+                    (s.getSpecialty() != null ? s.getSpecialty().getName() : "Неизвестна"),
+                    s.getCourse(),
+                    s.getGroup(),
+                    s.getStatus(),
+                    s.getAverageGrade()
+            );
+        }
+    }
+
 
     private static void saveFile() {
         if (filePath == null) {

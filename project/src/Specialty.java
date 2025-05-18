@@ -3,10 +3,13 @@ import java.util.List;
 import java.util.UUID;
 
 public class Specialty {
-    private final UUID id;
-
+    private UUID id;
     private String name;
     private final List<Subject> courses;
+
+    public Specialty() {
+        this.courses = new ArrayList<>();
+    }
 
     public Specialty(String name) {
         this.id = UUID.randomUUID();

@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Иван Петров",
+    "facultyNumber": "F12345",
+    "course": 2,
+    "group": 1,
+    "status": "ENROLLED",
+    "averageGrade": 5.25,
+    "specialtyName": "Компютърни науки"
+  },
+  {
+    "name": "Мария Иванова",
+    "facultyNumber": "F54321",
+    "course": 3,
+    "group": 2,
+    "status": "SUSPENDED",
+    "averageGrade": 4.75,
+    "specialtyName": "Информационни системи"
+  }
+]

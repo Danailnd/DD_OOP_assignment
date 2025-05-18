@@ -15,6 +15,9 @@ public class Student {
 
     private final List<StudentSubject> enrolledSubjects = new ArrayList<>();
 
+    public Student() {
+        this.id = UUID.randomUUID();
+    }
     public Student( String name, String facultyNumber, int course, Specialty specialty, int group, StudentStatus status, double averageGrade) {
         this.id = UUID.randomUUID();
         this.name = name;

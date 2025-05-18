@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Компютърни науки",
+    "courses": [
+      {
+        "name": "Структури от данни",
+        "mandatory": true,
+        "availableYears": [2, 3]
+      },
+      {
+        "name": "Основи на изкуствения интелект",
+        "mandatory": false,
+        "availableYears": [3, 4]
+      }
+    ]
+  },
+  {
+    "name": "Информационни системи",
+    "courses": [
+      {
+        "name": "Бази от данни",
+        "mandatory": true,
+        "availableYears": [2]
+      }
+    ]
+  }
+]

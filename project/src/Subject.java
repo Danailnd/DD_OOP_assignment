@@ -3,10 +3,13 @@ import java.util.UUID;
 
 //Дисциплина
 public class Subject {
-    private final UUID id;
+    private UUID id;
     private String name;
     private boolean isMandatory;
     private List<Integer> availableYears;
+
+    public Subject() {
+    }
 
     public Subject(String name, boolean isMandatory, List<Integer> availableYears) {
         this.id = UUID.randomUUID();
@@ -30,6 +33,10 @@ public class Subject {
 
     public boolean isMandatory() {
         return isMandatory;
+    }
+
+    public List<Integer> getAvailableYears() {
+        return availableYears;
     }
 
     // Setters
