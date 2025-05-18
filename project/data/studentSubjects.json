@@ -1,0 +1,17 @@
+[
+  {
+    "studentId": "a1d2c3f4-b5e6-7890-1234-56789abcdef0",
+    "subjectId": "5f27f3f3-3c3c-412a-9c3c-901f1c33a4d6",
+    "grade": 5.50
+  },
+  {
+    "studentId": "0a0b0c0d-1e1f-2021-2223-242526272829",
+    "subjectId": "2b0fe149-d894-4658-9de5-8d69efbb6c64",
+    "grade": 4.25
+  },
+  {
+    "studentId": "0a0b0c0d-1e1f-2021-2223-242526272829",
+    "subjectId": "9a91e7cc-df40-4e8e-9d09-7a4b4e2218c1",
+    "grade": 3.00
+  }
+]

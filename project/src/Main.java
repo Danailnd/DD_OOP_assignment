@@ -8,8 +8,11 @@ public class Main {
     private static String filePath = null;
     private static String specialitesFilePath = null;
     private static String studentsFilePath = null;
+    private static String studentSubjectsFilePath = null;
     private static List<Student> students = new ArrayList<>();
     private static List<Specialty> specialties = new ArrayList<>();
+
+    private static List<StudentSubject> studentSubjects = new ArrayList<>();
 
     public static void main(String[] args) {
         while (running) {
@@ -60,6 +63,12 @@ public class Main {
             students = loadedStudents;
             System.out.println("Успешно заредени " + students.size() + " студенти.");
         }
+        System.out.print("Път на файл със студентски предмети: ");
+        studentSubjectsFilePath = scanner.nextLine().trim();
+        studentSubjects = JsonDeserializeHelper.loadStudentSubjectsFromFile(
+                studentSubjectsFilePath, students, specialties
+        );
+        System.out.println("Заредени студентски предмети: " + (studentSubjects != null ? studentSubjects.size() : 0));
     }
 
     private static void displaySpecialties(){
@@ -95,7 +104,6 @@ public class Main {
             );
         }
     }
-
 
     private static void saveFile() {
         if (filePath == null) {
