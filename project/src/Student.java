@@ -1,5 +1,8 @@
+import java.util.UUID;
+
 public class Student {
 
+    private final UUID id;
     private String name;
     private String facultyNumber;
     private int course;
@@ -8,7 +11,19 @@ public class Student {
     private StudentStatus status;
     private double averageGrade;
 
-    public Student(String name, String facultyNumber, int course, String specialty, int group, StudentStatus status, double averageGrade) {
+    public Student(UUID id, String name, String facultyNumber, int course, String specialty, int group, StudentStatus status, double averageGrade) {
+        this.id = id;
+        this.name = name;
+        this.facultyNumber = facultyNumber;
+        this.course = course;
+        this.specialty = specialty;
+        this.group = group;
+        this.status = status;
+        this.averageGrade = averageGrade;
+    }
+
+    public Student( String name, String facultyNumber, int course, String specialty, int group, StudentStatus status, double averageGrade) {
+        this.id = UUID.randomUUID();
         this.name = name;
         this.facultyNumber = facultyNumber;
         this.course = course;
@@ -20,6 +35,10 @@ public class Student {
 
 
 //    getters and setters
+
+    public UUID getId(){
+       return id;
+    }
     public String getName() {
         return name;
     }
@@ -75,4 +94,6 @@ public class Student {
     public void setAverageGrade(double averageGrade) {
         this.averageGrade = averageGrade;
     }
+
+
 }
