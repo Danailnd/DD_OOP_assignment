@@ -3,7 +3,6 @@ import java.util.UUID;
 
 //Дисциплина
 public class Subject {
-
     private final UUID id;
     private String name;
     private boolean isMandatory;
