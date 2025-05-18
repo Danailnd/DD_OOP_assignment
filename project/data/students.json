@@ -1,20 +1,22 @@
 [
   {
+    "id": "a1d2c3f4-b5e6-7890-1234-56789abcdef0",
     "name": "Иван Петров",
     "facultyNumber": "F12345",
     "course": 2,
+    "specialtyId": "8c7b935e-b81b-4569-bffd-16e33f1ad9e2",
     "group": 1,
     "status": "ENROLLED",
-    "averageGrade": 5.25,
-    "specialtyName": "Компютърни науки"
+    "averageGrade": 5.25
   },
   {
-    "name": "Мария Иванова",
-    "facultyNumber": "F54321",
+    "id": "0a0b0c0d-1e1f-2021-2223-242526272829",
+    "name": "Мария Георгиева",
+    "facultyNumber": "F67890",
     "course": 3,
+    "specialtyId": "e42a6456-1761-4ef9-9c88-06d5d08802db",
     "group": 2,
     "status": "SUSPENDED",
-    "averageGrade": 4.75,
-    "specialtyName": "Информационни системи"
+    "averageGrade": 4.75
   }
 ]

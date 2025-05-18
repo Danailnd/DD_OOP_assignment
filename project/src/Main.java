@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    private static Scanner scanner = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in);
     private static boolean running = true;
     private static String filePath = null;
     private static String specialitesFilePath = null;
@@ -55,7 +55,7 @@ public class Main {
         List<Student> loadedStudents = JsonDeserializeHelper.loadStudentsFromFile(studentsFilePath, specialties);
 
         if (loadedStudents == null) {
-            System.out.println("Неуспешно зареждан1е на студенти.");
+            System.out.println("Неуспешно зареждане на студенти.");
         } else {
             students = loadedStudents;
             System.out.println("Успешно заредени " + students.size() + " студенти.");

@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public class Student {
 
-    private final UUID id;
+    private  UUID id;
     private String name;
     private String facultyNumber;
     private int course;
@@ -16,7 +16,7 @@ public class Student {
     private final List<StudentSubject> enrolledSubjects = new ArrayList<>();
 
     public Student() {
-        this.id = UUID.randomUUID();
+
     }
     public Student( String name, String facultyNumber, int course, Specialty specialty, int group, StudentStatus status, double averageGrade) {
         this.id = UUID.randomUUID();
@@ -132,6 +132,9 @@ public class Student {
         return averageGrade;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
     public void setName(String name) {
         this.name = name;
     }

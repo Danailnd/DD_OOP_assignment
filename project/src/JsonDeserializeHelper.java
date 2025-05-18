@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.lang.reflect.Type;
+import java.util.UUID;
 
 public class JsonDeserializeHelper {
 
@@ -30,32 +31,31 @@ public class JsonDeserializeHelper {
             List<Student> result = new ArrayList<>();
             for (StudentDTO dto : dtos) {
                 Specialty matched = specialties.stream()
-                        .filter(s -> s.getName().equalsIgnoreCase(dto.specialtyName))
+                        .filter(s -> s.getId().toString().equals(dto.specialtyId))
                         .findFirst()
                         .orElse(null);
 
                 if (matched == null) {
-                    System.out.println("Специалността не е намерена: " + dto.specialtyName);
+                    System.out.println("Специалността с ID не е намерена: " + dto.specialtyId);
                     continue;
                 }
 
                 Student student = new Student();
+                student.setId(UUID.fromString(dto.id));
                 student.setName(dto.name);
                 student.setFacultyNumber(dto.facultyNumber);
                 student.setCourse(dto.course);
                 student.setGroup(dto.group);
-                student.setStatus(StudentStatus.valueOf(dto.status)); // Make sure case matches!
+                student.setStatus(StudentStatus.valueOf(dto.status));
                 student.setAverageGrade(dto.averageGrade);
                 student.setSpecialty(matched);
 
                 result.add(student);
             }
-
             return result;
         } catch (Exception e) {
             System.out.println("Грешка при зареждане на студенти: " + e.getMessage());
             return null;
         }
     }
-
 }

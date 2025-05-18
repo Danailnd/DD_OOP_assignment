@@ -1,13 +1,16 @@
 [
   {
+    "id": "8c7b935e-b81b-4569-bffd-16e33f1ad9e2",
     "name": "Компютърни науки",
     "courses": [
       {
+        "id": "5f27f3f3-3c3c-412a-9c3c-901f1c33a4d6",
         "name": "Структури от данни",
         "mandatory": true,
         "availableYears": [2, 3]
       },
       {
+        "id": "9a91e7cc-df40-4e8e-9d09-7a4b4e2218c1",
         "name": "Основи на изкуствения интелект",
         "mandatory": false,
         "availableYears": [3, 4]
@@ -15,9 +18,11 @@
     ]
   },
   {
+    "id": "e42a6456-1761-4ef9-9c88-06d5d08802db",
     "name": "Информационни системи",
     "courses": [
       {
+        "id": "2b0fe149-d894-4658-9de5-8d69efbb6c64",
         "name": "Бази от данни",
         "mandatory": true,
         "availableYears": [2]

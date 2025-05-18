@@ -5,10 +5,9 @@ import java.util.UUID;
 public class Specialty {
     private UUID id;
     private String name;
-    private final List<Subject> courses;
+    private List<Subject> courses;
 
     public Specialty() {
-        this.courses = new ArrayList<>();
     }
 
     public Specialty(String name) {
@@ -43,6 +42,7 @@ public class Specialty {
     }
 
 //    Setters
+    public void setId(UUID id){this.id = id;}
     public void setName(String name) {
         this.name = name;
     }
