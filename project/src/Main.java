@@ -5,8 +5,7 @@ import java.util.Scanner;
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
     private static boolean running = true;
-    private static String filePath = null;
-    private static String specialitesFilePath = null;
+    private static String specialtiesFilePath = null;
     private static String studentsFilePath = null;
     private static String studentSubjectsFilePath = null;
     private static List<Student> students = new ArrayList<>();
@@ -25,9 +24,12 @@ public class Main {
 
     private static void printCommands() {
         System.out.println("\n--- Меню за Управление на Студенти ---");
-        System.out.println("1. Отвори файл");
-        System.out.println("2. Запази файл");
-        System.out.println("3. Запази като");
+        System.out.println("1. Отвори файл (Open file)");
+        System.out.println("2. Запази файл (Save file)");
+        System.out.println("3. Запази като (Save as)");
+        System.out.println("4. Запиши нов студент (Enroll)");
+        System.out.println("5. Запиши студент в следващ курс (Advance)");
+        System.out.println("6. Промени (Change)");
         System.out.println("8. Помощ");
         System.out.println("9. Изход");
     }
@@ -37,16 +39,178 @@ public class Main {
             case "1": openFile(); break;
             case "2": saveFile(); break;
             case "3": saveAs(); break;
+            case "4": enrollStudent(); break;
+            case "5": handleAdvance(); break;
+            case "6": changeStudent(); break;
             case "8": showHelp(); break;
             case "9": exitApp(); break;
             default: System.out.println("Невалидна команда. Избери число от 1–9.");
         }
     }
 
+    private static void enrollStudent() {
+        System.out.print("Въведи факултетен номер: ");
+        String fn = scanner.nextLine().trim();
+
+        System.out.print("Въведи име на специалност: ");
+        String programName = scanner.nextLine().trim();
+
+        System.out.print("Въведи номер на група: ");
+        int group;
+        try {
+            group = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Невалиден номер на група.");
+            return;
+        }
+        System.out.print("Въведи име на студента: ");
+        String name = scanner.nextLine().trim();
+
+        Specialty foundSpecialty = specialties.stream()
+                .filter(s -> s.getName().equalsIgnoreCase(programName))
+                .findFirst()
+                .orElse(null);
+
+        if (foundSpecialty == null) {
+            System.out.println("Специалност с име \"" + programName + "\" не е намерена.");
+            return;
+        }
+
+        Student newStudent = new Student();
+        newStudent.setId(java.util.UUID.randomUUID());
+        newStudent.setName(name);
+        newStudent.setFacultyNumber(fn);
+        newStudent.setSpecialty(foundSpecialty);
+        newStudent.setCourse(1);
+        newStudent.setGroup(group);
+        newStudent.setStatus(StudentStatus.ENROLLED);
+        newStudent.setAverageGrade(0.0);
+
+        students.add(newStudent);
+        System.out.printf("Успешно записан студент %s в 1 курс на специалност %s, група %d, ФН: %s%n",
+                name, programName, group, fn);
+    }
+
+    private static void changeStudent() {
+        System.out.print("Факултетен номер на студента: ");
+        String fn = scanner.nextLine().trim();
+
+        Student student = students.stream()
+                .filter(s -> s.getFacultyNumber().equalsIgnoreCase(fn))
+                .findFirst()
+                .orElse(null);
+
+        if (student == null) {
+            System.out.println("Студент с факултетен номер " + fn + " не е намерен.");
+            return;
+        }
+
+        System.out.print("Опция за промяна (specialty, group, year): ");
+        String option = scanner.nextLine().trim().toLowerCase();
+
+        System.out.print("Нова стойност: ");
+        String value = scanner.nextLine().trim();
+
+        switch (option) {
+            case "group":
+                try {
+                    int newGroup = Integer.parseInt(value);
+                    student.setGroup(newGroup);
+                    System.out.println("Студентът е прехвърлен в група " + newGroup);
+                } catch (NumberFormatException e) {
+                    System.out.println("Невалиден номер на група.");
+                }
+                break;
+
+            case "year":
+                advance(Integer.parseInt(value), student);
+                break;
+
+            case "specialty":
+                Specialty newSpecialty = specialties.stream()
+                        .filter(s -> s.getName().equalsIgnoreCase(value))
+                        .findFirst()
+                        .orElse(null);
+
+                if (newSpecialty == null) {
+                    System.out.println("Специалност с име \"" + value + "\" не е намерена.");
+                    return;
+                }
+
+                int studentYear = student.getCourse();
+
+                List<Subject> requiredSubjects = newSpecialty.getCourses().stream()
+                        .filter(s -> s.isMandatory() &&
+                                s.getAvailableYears().stream().anyMatch(y -> y < studentYear))
+                        .toList();
+
+                boolean isFailingRequiredClass = requiredSubjects.stream()
+                        .anyMatch(subject -> studentSubjects.stream()
+                                .anyMatch(ss ->
+                                        ss.getStudent().equals(student) &&
+                                                ss.getSubject().equals(subject) &&
+                                                ss.getGrade() < 3.0));
+
+                if (!isFailingRequiredClass) {
+                    student.setSpecialty(newSpecialty);
+                    System.out.println("Студентът е прехвърлен в специалност " + newSpecialty.getName());
+                } else {
+                    System.out.println("Прехвърляне не е възможно. Студентът няма положени всички задължителни предмети от минали курсове на новата специалност.");
+                }
+                break;
+
+            default:
+                System.out.println("Невалидна опция. Избери една от следните: program, group, year.");
+        }
+    }
+
+    private static void advance(int targetYear, Student student){
+        try {
+            int currentYear = student.getCourse();
+
+            if (targetYear != currentYear + 1) {
+                System.out.println("Прехвърляне е разрешено само към следващ курс.");
+                return;
+            }
+
+            long failedMandatoryCourses = studentSubjects.stream()
+                    .filter(ss -> ss.getStudent().equals(student))
+                    .filter(ss -> ss.getSubject().isMandatory())
+                    .filter(ss -> ss.getSubject().getAvailableYears().stream().anyMatch(y -> y < targetYear))
+                    .filter(ss -> ss.getGrade() < 3.0)
+                    .count();
+
+            if (failedMandatoryCourses <= 2) {
+                student.setCourse(targetYear);
+                System.out.println("Студентът е прехвърлен в курс " + targetYear);
+            } else {
+                System.out.println("Прехвърляне не е възможно. Студентът има " + failedMandatoryCourses + " неположени задължителни предмета.");
+            }
+        } catch (Exception e) {
+            System.out.println("Невалиден курс.");
+        }
+    }
+
+    private static void handleAdvance(){
+        System.out.print("Факултетен номер на студента: ");
+        String fn = scanner.nextLine().trim();
+
+        Student student = students.stream()
+                .filter(s -> s.getFacultyNumber().equalsIgnoreCase(fn))
+                .findFirst()
+                .orElse(null);
+
+        if (student == null) {
+            System.out.println("Студент с факултетен номер " + fn + " не е намерен.");
+            return;
+        }
+        advance(student.getCourse()+1,student);
+    }
+
     private static void openFile() {
         System.out.print("Път на файл с специалности: ");
-        specialitesFilePath = scanner.nextLine().trim();
-        List<Specialty> loaded = JsonDeserializeHelper.loadSpecialtiesFromFile(specialitesFilePath);
+        specialtiesFilePath = scanner.nextLine().trim();
+        List<Specialty> loaded = JsonDeserializeHelper.loadSpecialtiesFromFile(specialtiesFilePath);
         if (loaded == null) {
             System.out.println("Неуспешно зареждане на специалности.");
         } else {
@@ -104,22 +268,68 @@ public class Main {
             );
         }
     }
-
     private static void saveFile() {
-        if (filePath == null) {
-            System.out.println("Не е намерен файл со това име, създава се нов файл.");
+        if (specialtiesFilePath == null || studentsFilePath == null || studentSubjectsFilePath == null) {
+            System.out.println("Не са намерени заредени файлове. Моля използвайте 'Запази като' за запазване в нова директория.");
             return;
         }
-        // TODO:
-        System.out.println("Запазено като: " + filePath);
+
+        // Convert to DTOs before saving
+        List<SpecialtyDTO> specialtyDTOs = specialties.stream()
+                .map(specialty -> {
+                    SpecialtyDTO dto = new SpecialtyDTO();
+                    dto.id = specialty.getId().toString();
+                    dto.name = specialty.getName();
+                    dto.courses = specialty.getCourses();
+                    return dto;
+                }).toList();
+
+        List<StudentDTO> studentDTOs = students.stream()
+                .map(student -> {
+                    StudentDTO dto = new StudentDTO();
+                    dto.id = student.getId().toString();
+                    dto.name = student.getName();
+                    dto.facultyNumber = student.getFacultyNumber();
+                    dto.course = student.getCourse();
+                    dto.specialtyId = student.getSpecialty().getId().toString();
+                    dto.group = student.getGroup();
+                    dto.status = student.getStatus().toString();
+                    dto.averageGrade = student.getAverageGrade();
+                    return dto;
+                }).toList();
+
+        List<StudentSubjectDTO> subjectDTOs = studentSubjects.stream()
+                .map(ss -> {
+                    StudentSubjectDTO dto = new StudentSubjectDTO();
+                    dto.studentId = ss.getStudent().getId().toString();
+                    dto.subjectId = ss.getSubject().getId().toString();
+                    dto.grade = (float) ss.getGrade();
+                    return dto;
+                }).toList();
+
+        boolean specialtiesSaved = JsonSerializeHelper.saveToFile(specialtyDTOs, specialtiesFilePath);
+        boolean studentsSaved = JsonSerializeHelper.saveToFile(studentDTOs, studentsFilePath);
+        boolean studentSubjectsSaved = JsonSerializeHelper.saveToFile(subjectDTOs, studentSubjectsFilePath);
+
+        if (specialtiesSaved && studentsSaved && studentSubjectsSaved) {
+            System.out.println("Успешно записани всички данни.");
+        } else {
+            System.out.println("Възникна проблем при записване на един или повече файлове.");
+        }
     }
 
     private static void saveAs() {
-        System.out.print("Път на файла: ");
-        filePath = scanner.nextLine().trim();
+        System.out.print("Път за запазване на специалностите: ");
+        specialtiesFilePath = scanner.nextLine().trim();
+
+        System.out.print("Път за запазване на студентите: ");
+        studentsFilePath = scanner.nextLine().trim();
+
+        System.out.print("Път за запазване на студентските предмети: ");
+        studentSubjectsFilePath = scanner.nextLine().trim();
+
         saveFile();
     }
-
     private static void showHelp() {
         System.out.println("Помощ");
     }

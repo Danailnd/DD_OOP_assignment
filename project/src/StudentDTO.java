@@ -7,4 +7,5 @@ public class StudentDTO {
     public int group;
     public String status;
     public double averageGrade;
+
 }

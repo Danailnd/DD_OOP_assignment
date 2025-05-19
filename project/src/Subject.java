@@ -26,15 +26,12 @@ public class Subject {
     public UUID getId() {
         return id;
     }
-
     public String getName() {
         return name;
     }
-
     public boolean isMandatory() {
         return isMandatory;
     }
-
     public List<Integer> getAvailableYears() {
         return availableYears;
     }
@@ -44,11 +41,9 @@ public class Subject {
     public void setName(String name) {
         this.name = name;
     }
-
     public void setMandatory(boolean mandatory) {
         isMandatory = mandatory;
     }
-
     public void setAvailableYears(List<Integer> availableYears) {
         this.availableYears = availableYears;
     }
