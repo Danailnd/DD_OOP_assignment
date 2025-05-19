@@ -399,6 +399,55 @@ public class Main {
         studentSubjects.add(_studentSubject);
         System.out.println("Успешно записване на дисциплината: " + subject.getName());
     }
+    private static void addGrade(){
+        System.out.print("Факултетен номер: ");
+        String fn = scanner.nextLine().trim();
+
+        Student student = students.stream()
+                .filter(s -> s.getFacultyNumber().equals(fn))
+                .findFirst()
+                .orElse(null);
+
+        if (student == null) {
+            System.out.println("Студент с този факултетен номер не е намерен.");
+            return;
+        }
+        if (student.getStatus() == StudentStatus.SUSPENDED) {
+            System.out.println("Студентът е прекъснал и не може да се явява на изпити.");
+            return;
+        }
+
+        System.out.print("Оценка: ");
+        String gradeStr = scanner.nextLine().trim();
+        float grade;
+        try {
+            grade = Float.parseFloat(gradeStr);
+            if (grade < 2.0 || grade > 6.0) {
+                System.out.println("Оценката трябва да е между 2.00 и 6.00.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Невалидна стойност за оценка.");
+            return;
+        }
+
+        System.out.print("Име на курс: ");
+        String courseName = scanner.nextLine().trim();
+
+        StudentSubject enrollment = studentSubjects.stream()
+                .filter(ss -> ss.getStudent().equals(student) &&
+                        ss.getSubject().getName().equalsIgnoreCase(courseName))
+                .findFirst()
+                .orElse(null);
+
+        if (enrollment == null) {
+            System.out.println("Студентът не е записан в дисциплината \"" + courseName + "\".");
+            return;
+        }
+
+        enrollment.setGrade(grade);
+        System.out.println("Оценката е добавена успешно: " + courseName + " - " + grade);
+    }
     private static void openFile() {
         System.out.print("Път на файл с специалности: ");
         specialtiesFilePath = scanner.nextLine().trim();
