@@ -29,9 +29,13 @@ public class Main {
         System.out.println("3. Запази като (Save as)");
         System.out.println("4. Запиши нов студент (Enroll)");
         System.out.println("5. Запиши студент в следващ курс (Advance)");
-        System.out.println("6. Промени (Change)");
-        System.out.println("8. Помощ");
-        System.out.println("9. Изход");
+        System.out.println("6. Промени студент (Change)");
+        System.out.println("7. Завърши студент (Graduate)");
+        System.out.println("8. Прекъсни студент (Interrupt)");
+        System.out.println("9. Възобнови студент (Resume)");
+        
+        System.out.println("11. Помощ");
+        System.out.println("12. Изход");
     }
 
     private static void handleCommands(String command) {
@@ -42,9 +46,13 @@ public class Main {
             case "4": enrollStudent(); break;
             case "5": handleAdvance(); break;
             case "6": changeStudent(); break;
-            case "8": showHelp(); break;
-            case "9": exitApp(); break;
-            default: System.out.println("Невалидна команда. Избери число от 1–9.");
+            case "7": graduateStudent(); break;
+            case "8": interruptStudent(); break;
+            case "9": resumeStudent(); break;
+
+            case "11": showHelp(); break;
+            case "12": exitApp(); break;
+            default: System.out.println("Невалидна команда. Избери число от 1–12.");
         }
     }
 
@@ -102,6 +110,11 @@ public class Main {
 
         if (student == null) {
             System.out.println("Студент с факултетен номер " + fn + " не е намерен.");
+            return;
+        }
+
+        if (student.getStatus() == StudentStatus.SUSPENDED) {
+            System.out.println("Операцията не е позволена. Студентът е със статус 'прекъснал'.");
             return;
         }
 
@@ -189,6 +202,92 @@ public class Main {
         } catch (Exception e) {
             System.out.println("Невалиден курс.");
         }
+    }
+
+    private static void graduateStudent(){
+        System.out.print("Факултетен номер: ");
+        String fn = scanner.nextLine().trim();
+
+        Student student = students.stream()
+                .filter(s -> s.getFacultyNumber().equals(fn))
+                .findFirst()
+                .orElse(null);
+
+        if (student == null) {
+            System.out.println("Студент с този факултетен номер не е намерен.");
+            return;
+        }
+
+        List<StudentSubject> enrolledSubjects = studentSubjects.stream()
+                .filter(ss -> ss.getStudent().equals(student))
+                .toList();
+
+        boolean allPassed = enrolledSubjects.stream()
+                .allMatch(ss -> ss.getGrade() >= 3.0);
+
+        if (!allPassed) {
+            System.out.println("Студентът не е положил успешно всички изпити.");
+            return;
+        }
+
+        student.setStatus(StudentStatus.GRADUATED);
+        System.out.println("Студентът е успешно отбелязан като завършил.");
+    }
+
+    private static void interruptStudent() {
+        System.out.print("Факултетен номер: ");
+        String fn = scanner.nextLine().trim();
+
+        Student student = students.stream()
+                .filter(s -> s.getFacultyNumber().equals(fn))
+                .findFirst()
+                .orElse(null);
+
+        if (student == null) {
+            System.out.println("Студент с този факултетен номер не е намерен.");
+            return;
+        }
+
+        if(student.getStatus().equals(StudentStatus.SUSPENDED)){
+            System.out.println("Студентът вече е отбелязан като прекъснал.");
+            return;
+        }
+
+        if(student.getStatus().equals(StudentStatus.GRADUATED)){
+            System.out.println("Този студент вече е завършил.");
+            return;
+        }
+
+        student.setStatus(StudentStatus.SUSPENDED);
+        System.out.println("Студентът е успешно отбелязан като прекъснал.");
+    }
+
+    private static void resumeStudent(){
+        System.out.print("Факултетен номер: ");
+        String fn = scanner.nextLine().trim();
+
+        Student student = students.stream()
+                .filter(s -> s.getFacultyNumber().equals(fn))
+                .findFirst()
+                .orElse(null);
+
+        if (student == null) {
+            System.out.println("Студент с този факултетен номер не е намерен.");
+            return;
+        }
+
+        if(student.getStatus().equals(StudentStatus.ENROLLED)){
+            System.out.println("Студентът вече е отбелязан като записан.");
+            return;
+        }
+
+        if(student.getStatus().equals(StudentStatus.GRADUATED)){
+            System.out.println("Този студент вече е завършил.");
+            return;
+        }
+
+        student.setStatus(StudentStatus.ENROLLED);
+        System.out.println("Студентът е успешно отбелязан като записан.");
     }
 
     private static void handleAdvance(){
