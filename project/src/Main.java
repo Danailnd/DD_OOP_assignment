@@ -33,9 +33,11 @@ public class Main {
         System.out.println("7. Завърши студент (Graduate)");
         System.out.println("8. Прекъсни студент (Interrupt)");
         System.out.println("9. Възобнови студент (Resume)");
-        
-        System.out.println("11. Помощ");
-        System.out.println("12. Изход");
+        System.out.println("10. Покажи информация за студент (print)");
+        System.out.println("11. Покажи информация за всички студенти (print all)");
+//        System.out.println();
+        System.out.println("13. Помощ");
+        System.out.println("14. Изход");
     }
 
     private static void handleCommands(String command) {
@@ -49,9 +51,10 @@ public class Main {
             case "7": graduateStudent(); break;
             case "8": interruptStudent(); break;
             case "9": resumeStudent(); break;
-
-            case "11": showHelp(); break;
-            case "12": exitApp(); break;
+            case "10": displayStudent(); break;
+            case "11": displayStudents(); break;
+            case "13": showHelp(); break;
+            case "14": exitApp(); break;
             default: System.out.println("Невалидна команда. Избери число от 1–12.");
         }
     }
@@ -290,6 +293,47 @@ public class Main {
         System.out.println("Студентът е успешно отбелязан като записан.");
     }
 
+    private static void displayStudent() {
+        System.out.print("Факултетен номер: ");
+        String fn = scanner.nextLine().trim();
+
+        Student student = students.stream()
+                .filter(s -> s.getFacultyNumber().equals(fn))
+                .findFirst()
+                .orElse(null);
+
+        if (student == null) {
+            System.out.println("Студент с този факултетен номер не е намерен.");
+            return;
+        }
+            System.out.printf("- Име: %s | Факултетен номер: %s | Специалност: %s | Курс: %d | Група: %d | Статус: %s | Среден успех: %.2f%n",
+                    student.getName(),
+                    student.getFacultyNumber(),
+                    (student.getSpecialty() != null ? student.getSpecialty().getName() : "Неизвестна"),
+                    student.getCourse(),
+                    student.getGroup(),
+                    student.getStatus(),
+                    student.getAverageGrade()
+            );
+    }
+    private static void displayStudents() {
+        if (students.isEmpty()) {
+            System.out.println("Няма заредени студенти.");
+            return;
+        }
+        System.out.println("Списък на студентите:");
+        for (Student s : students) {
+            System.out.printf("- Име: %s | Факултетен номер: %s | Специалност: %s | Курс: %d | Група: %d | Статус: %s | Среден успех: %.2f%n",
+                    s.getName(),
+                    s.getFacultyNumber(),
+                    (s.getSpecialty() != null ? s.getSpecialty().getName() : "Неизвестна"),
+                    s.getCourse(),
+                    s.getGroup(),
+                    s.getStatus(),
+                    s.getAverageGrade()
+            );
+        }
+    }
     private static void handleAdvance(){
         System.out.print("Факултетен номер на студента: ");
         String fn = scanner.nextLine().trim();
@@ -346,25 +390,6 @@ public class Main {
                 System.out.printf("  * %s (Задължителен: %b, Възможни курсове: %s)%n",
                         subject.getName(), subject.isMandatory(), subject.getAvailableYears());
             }
-        }
-    }
-
-    private static void displayStudents() {
-        if (students.isEmpty()) {
-            System.out.println("Няма заредени студенти.");
-            return;
-        }
-        System.out.println("Списък на студентите:");
-        for (Student s : students) {
-            System.out.printf("- Име: %s | Факултетен номер: %s | Специалност: %s | Курс: %d | Група: %d | Статус: %s | Среден успех: %.2f%n",
-                    s.getName(),
-                    s.getFacultyNumber(),
-                    (s.getSpecialty() != null ? s.getSpecialty().getName() : "Неизвестна"),
-                    s.getCourse(),
-                    s.getGroup(),
-                    s.getStatus(),
-                    s.getAverageGrade()
-            );
         }
     }
     private static void saveFile() {
