@@ -37,6 +37,7 @@ public class Main {
         System.out.println("12. Запиши студент в предмет (enrollin)");
         System.out.println("13. Дай оценка на студент за предмет (addgrade)");
         System.out.println("14. Извади протокол за предмет (protocol)");
+        System.out.println("15. Извади академична справка за уценката на студент (report)");
         System.out.println("16. Помощ");
         System.out.println("17. Изход");
     }
@@ -57,6 +58,7 @@ public class Main {
             case "12": enrollStudentInSubject(); break;
             case "13": addGrade(); break;
             case "14": printProtocol(); break;
+            case "15": printReport(); break;
             case "16": showHelp(); break;
             case "17": exitApp(); break;
             default: System.out.println("Невалидна команда. Избери число от 1–12.");
@@ -487,6 +489,69 @@ public class Main {
                 }
             }
         }
+    }
+    private static void printReport() {
+        System.out.print("Факултетен номер: ");
+        String fn = scanner.nextLine().trim();
+
+        Student student = students.stream()
+                .filter(s -> s.getFacultyNumber().equals(fn))
+                .findFirst()
+                .orElse(null);
+
+        if (student == null) {
+            System.out.println("Студент с този факултетен номер не е намерен.");
+            return;
+        }
+
+        List<StudentSubject> records = studentSubjects.stream()
+                .filter(ss -> ss.getStudent().equals(student))
+                .toList();
+
+        if (records.isEmpty()) {
+            System.out.println("Няма записани дисциплини за този студент.");
+            return;
+        }
+
+        List<StudentSubject> passed = new ArrayList<>();
+        List<StudentSubject> missing = new ArrayList<>();
+
+        double total = 0;
+        int count = 0;
+
+        for (StudentSubject ss : records) {
+            if (ss.getGrade() >= 3.0) {
+                passed.add(ss);
+                total += ss.getGrade();
+                count++;
+            } else if (ss.getGrade() == 0.0f) {
+                missing.add(ss);
+                total += 2.0;
+                count++;
+            } else {
+                // Grade between 2.0 and 3.0 – considered failed
+                total += ss.getGrade();
+                count++;
+            }
+        }
+
+        System.out.println("\n--- Академична справка за " + student.getName() + " (ФН: " + fn + ") ---");
+
+        if (!passed.isEmpty()) {
+            System.out.println("\n Взети изпити:");
+            for (StudentSubject ss : passed) {
+                System.out.printf("• %s - %.2f%n", ss.getSubject().getName(), ss.getGrade());
+            }
+        }
+
+        if (!missing.isEmpty()) {
+            System.out.println("\n Невзети (без оценка, броят се като 2.00):");
+            for (StudentSubject ss : missing) {
+                System.out.printf("• %s%n", ss.getSubject().getName());
+            }
+        }
+
+        System.out.printf("%n Среден успех: %.2f%n", count > 0 ? total / count : 0.0);
     }
     private static void openFile() {
         System.out.print("Път на файл с специалности: ");
