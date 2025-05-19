@@ -30,7 +30,6 @@ public class StudentSubject {
         return grade;
     }
 
-
     // Setters
     public void setStudent(Student student) {
         this.student = student;

@@ -35,9 +35,10 @@ public class Main {
         System.out.println("9. Възобнови студент (Resume)");
         System.out.println("10. Покажи информация за студент (print)");
         System.out.println("11. Покажи информация за всички студенти (print all)");
-//        System.out.println();
-        System.out.println("13. Помощ");
-        System.out.println("14. Изход");
+        System.out.println("12. Запиши в клас (enrollin)");
+        System.out.println("13. Дай оценка за клас (addgrade)");
+        System.out.println("16. Помощ");
+        System.out.println("17. Изход");
     }
 
     private static void handleCommands(String command) {
@@ -53,12 +54,13 @@ public class Main {
             case "9": resumeStudent(); break;
             case "10": displayStudent(); break;
             case "11": displayStudents(); break;
-            case "13": showHelp(); break;
-            case "14": exitApp(); break;
+            case "12": enrollStudentInSubject(); break;
+            case "13": addGrade(); break;
+            case "16": showHelp(); break;
+            case "17": exitApp(); break;
             default: System.out.println("Невалидна команда. Избери число от 1–12.");
         }
     }
-
     private static void enrollStudent() {
         System.out.print("Въведи факултетен номер: ");
         String fn = scanner.nextLine().trim();
@@ -101,7 +103,6 @@ public class Main {
         System.out.printf("Успешно записан студент %s в 1 курс на специалност %s, група %d, ФН: %s%n",
                 name, programName, group, fn);
     }
-
     private static void changeStudent() {
         System.out.print("Факултетен номер на студента: ");
         String fn = scanner.nextLine().trim();
@@ -179,7 +180,6 @@ public class Main {
                 System.out.println("Невалидна опция. Избери една от следните: program, group, year.");
         }
     }
-
     private static void advance(int targetYear, Student student){
         try {
             int currentYear = student.getCourse();
@@ -206,7 +206,6 @@ public class Main {
             System.out.println("Невалиден курс.");
         }
     }
-
     private static void graduateStudent(){
         System.out.print("Факултетен номер: ");
         String fn = scanner.nextLine().trim();
@@ -236,7 +235,6 @@ public class Main {
         student.setStatus(StudentStatus.GRADUATED);
         System.out.println("Студентът е успешно отбелязан като завършил.");
     }
-
     private static void interruptStudent() {
         System.out.print("Факултетен номер: ");
         String fn = scanner.nextLine().trim();
@@ -264,7 +262,6 @@ public class Main {
         student.setStatus(StudentStatus.SUSPENDED);
         System.out.println("Студентът е успешно отбелязан като прекъснал.");
     }
-
     private static void resumeStudent(){
         System.out.print("Факултетен номер: ");
         String fn = scanner.nextLine().trim();
@@ -292,7 +289,6 @@ public class Main {
         student.setStatus(StudentStatus.ENROLLED);
         System.out.println("Студентът е успешно отбелязан като записан.");
     }
-
     private static void displayStudent() {
         System.out.print("Факултетен номер: ");
         String fn = scanner.nextLine().trim();
@@ -349,7 +345,60 @@ public class Main {
         }
         advance(student.getCourse()+1,student);
     }
+    private static void enrollStudentInSubject() {
+        System.out.print("Факултетен номер: ");
+        String fn = scanner.nextLine().trim();
 
+        Student student = students.stream()
+                .filter(s -> s.getFacultyNumber().equals(fn))
+                .findFirst()
+                .orElse(null);
+
+        if (student == null) {
+            System.out.println("Студент с този факултетен номер не е намерен.");
+            return;
+        }
+
+        if (student.getStatus() == StudentStatus.SUSPENDED) {
+            System.out.println("Студентът е с прекъснато обучение и не може да записва дисциплини.");
+            return;
+        }
+
+        if (student.getSpecialty() == null) {
+            System.out.println("Студентът няма зададена специалност.");
+            return;
+        }
+        System.out.print("Име на курс за прибавяне: ");
+        String courseName = scanner.nextLine().trim();
+
+        // Find the subject in the specialty
+        Subject subject = student.getSpecialty().getCourses().stream()
+                .filter(s -> s.getName().equalsIgnoreCase(courseName))
+                .findFirst()
+                .orElse(null);
+
+        if (subject == null) {
+            System.out.println("Дисциплината не е част от специалността на студента.");
+            return;
+        }
+
+        if (!subject.getAvailableYears().contains(student.getCourse())) {
+            System.out.println("Дисциплината не се предлага за курс " + student.getCourse() + ".");
+            return;
+        }
+
+        boolean alreadyEnrolled = studentSubjects.stream()
+                .anyMatch(ss -> ss.getStudent().equals(student) && ss.getSubject().equals(subject));
+
+        if (alreadyEnrolled) {
+            System.out.println("Студентът вече е записан в тази дисциплина.");
+            return;
+        }
+
+        StudentSubject _studentSubject = new StudentSubject(student, subject, -1);
+        studentSubjects.add(_studentSubject);
+        System.out.println("Успешно записване на дисциплината: " + subject.getName());
+    }
     private static void openFile() {
         System.out.print("Път на файл с специалности: ");
         specialtiesFilePath = scanner.nextLine().trim();
@@ -377,7 +426,6 @@ public class Main {
         );
         System.out.println("Заредени студентски предмети: " + (studentSubjects != null ? studentSubjects.size() : 0));
     }
-
     private static void displaySpecialties(){
         if(specialties.isEmpty()){
             System.out.println("Няма заредени специалности.");
@@ -441,7 +489,6 @@ public class Main {
             System.out.println("Възникна проблем при записване на един или повече файлове.");
         }
     }
-
     private static void saveAs() {
         System.out.print("Път за запазване на специалностите: ");
         specialtiesFilePath = scanner.nextLine().trim();
@@ -457,7 +504,6 @@ public class Main {
     private static void showHelp() {
         System.out.println("Помощ");
     }
-
     private static void exitApp() {
         System.out.println("Излизане от приложението...");
         running = false;
