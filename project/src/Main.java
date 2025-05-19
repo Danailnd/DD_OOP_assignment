@@ -1,6 +1,5 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
@@ -35,8 +34,9 @@ public class Main {
         System.out.println("9. Възобнови студент (Resume)");
         System.out.println("10. Покажи информация за студент (print)");
         System.out.println("11. Покажи информация за всички студенти (print all)");
-        System.out.println("12. Запиши в клас (enrollin)");
-        System.out.println("13. Дай оценка за клас (addgrade)");
+        System.out.println("12. Запиши студент в предмет (enrollin)");
+        System.out.println("13. Дай оценка на студент за предмет (addgrade)");
+        System.out.println("14. Извади протокол за предмет (protocol)");
         System.out.println("16. Помощ");
         System.out.println("17. Изход");
     }
@@ -56,6 +56,7 @@ public class Main {
             case "11": displayStudents(); break;
             case "12": enrollStudentInSubject(); break;
             case "13": addGrade(); break;
+            case "14": printProtocol(); break;
             case "16": showHelp(); break;
             case "17": exitApp(); break;
             default: System.out.println("Невалидна команда. Избери число от 1–12.");
@@ -447,6 +448,45 @@ public class Main {
 
         enrollment.setGrade(grade);
         System.out.println("Оценката е добавена успешно: " + courseName + " - " + grade);
+    }
+    private static void printProtocol() {
+        System.out.print("Име на дисциплина: ");
+        String courseName = scanner.nextLine().trim();
+
+        List<StudentSubject> enrolledInCourse = studentSubjects.stream()
+                .filter(ss -> ss.getSubject().getName().equalsIgnoreCase(courseName))
+                .toList();
+
+        if (enrolledInCourse.isEmpty()) {
+            System.out.println("Няма записани студенти в дисциплината \"" + courseName + "\".");
+            return;
+        }
+
+        Map<String, Map<Integer, List<StudentSubject>>> grouped =
+                enrolledInCourse.stream()
+                        .collect(Collectors.groupingBy(
+                                ss -> ss.getStudent().getSpecialty().getName(),
+                                Collectors.groupingBy(ss -> ss.getStudent().getCourse())
+                        ));
+
+        for (String specialty : grouped.keySet()) {
+            Map<Integer, List<StudentSubject>> byYear = grouped.get(specialty);
+            for (Integer year : byYear.keySet()) {
+                List<StudentSubject> list = byYear.get(year).stream()
+                        .sorted(Comparator.comparing(ss -> ss.getStudent().getFacultyNumber()))
+                        .toList();
+
+                System.out.printf("\n--- Протокол за дисциплина \"%s\" | Специалност: %s | Курс: %d ---\n",
+                        courseName, specialty, year);
+
+                for (StudentSubject ss : list) {
+                    Student s = ss.getStudent();
+                    String gradeStr = ss.getGrade() > 0 ? String.format("%.2f", ss.getGrade()) : "Няма оценка";
+                    System.out.printf("ФН: %s | Име: %s | Група: %d | Оценка: %s%n",
+                            s.getFacultyNumber(), s.getName(), s.getGroup(), gradeStr);
+                }
+            }
+        }
     }
     private static void openFile() {
         System.out.print("Път на файл с специалности: ");
