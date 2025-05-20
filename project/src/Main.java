@@ -374,7 +374,6 @@ public class Main {
         System.out.print("Име на курс за прибавяне: ");
         String courseName = scanner.nextLine().trim();
 
-        // Find the subject in the specialty
         Subject subject = student.getSpecialty().getCourses().stream()
                 .filter(s -> s.getName().equalsIgnoreCase(courseName))
                 .findFirst()
@@ -400,6 +399,7 @@ public class Main {
 
         StudentSubject _studentSubject = new StudentSubject(student, subject, -1);
         studentSubjects.add(_studentSubject);
+        student.enrollInSubject(_studentSubject);
         System.out.println("Успешно записване на дисциплината: " + subject.getName());
     }
     private static void addGrade(){
@@ -449,6 +449,7 @@ public class Main {
         }
 
         enrollment.setGrade(grade);
+       student.recalculateAverage();
         System.out.println("Оценката е добавена успешно: " + courseName + " - " + grade);
     }
     private static void printProtocol() {
@@ -471,6 +472,7 @@ public class Main {
                                 Collectors.groupingBy(ss -> ss.getStudent().getCourse())
                         ));
 
+        System.out.print("\n--- Протокол за дисциплина ---");
         for (String specialty : grouped.keySet()) {
             Map<Integer, List<StudentSubject>> byYear = grouped.get(specialty);
             for (Integer year : byYear.keySet()) {
@@ -478,8 +480,7 @@ public class Main {
                         .sorted(Comparator.comparing(ss -> ss.getStudent().getFacultyNumber()))
                         .toList();
 
-                System.out.printf("\n--- Протокол за дисциплина \"%s\" | Специалност: %s | Курс: %d ---\n",
-                        courseName, specialty, year);
+
 
                 for (StudentSubject ss : list) {
                     Student s = ss.getStudent();
@@ -516,22 +517,11 @@ public class Main {
         List<StudentSubject> passed = new ArrayList<>();
         List<StudentSubject> missing = new ArrayList<>();
 
-        double total = 0;
-        int count = 0;
-
         for (StudentSubject ss : records) {
             if (ss.getGrade() >= 3.0) {
                 passed.add(ss);
-                total += ss.getGrade();
-                count++;
-            } else if (ss.getGrade() == 0.0f) {
-                missing.add(ss);
-                total += 2.0;
-                count++;
             } else {
-                // Grade between 2.0 and 3.0 – considered failed
-                total += ss.getGrade();
-                count++;
+                missing.add(ss);
             }
         }
 
@@ -550,8 +540,7 @@ public class Main {
                 System.out.printf("• %s%n", ss.getSubject().getName());
             }
         }
-
-        System.out.printf("%n Среден успех: %.2f%n", count > 0 ? total / count : 0.0);
+        System.out.printf("%n Среден успех: %.2f%n", student.getAverageGrade());
     }
     private static void openFile() {
         System.out.print("Път на файл с специалности: ");
@@ -578,7 +567,13 @@ public class Main {
         studentSubjects = JsonDeserializeHelper.loadStudentSubjectsFromFile(
                 studentSubjectsFilePath, students, specialties
         );
-        System.out.println("Заредени студентски предмети: " + (studentSubjects != null ? studentSubjects.size() : 0));
+        System.out.println("Успешно заредени студентски предмета: " + (studentSubjects != null ? studentSubjects.size() : 0));
+
+        if (studentSubjects != null) {
+            for (Student student : students) {
+                student.recalculateAverage();
+            }
+        }
     }
     private static void displaySpecialties(){
         if(specialties.isEmpty()){

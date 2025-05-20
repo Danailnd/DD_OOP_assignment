@@ -11,7 +11,47 @@
   },
   {
     "studentId": "0a0b0c0d-1e1f-2021-2223-242526272829",
+    "subjectId": "aae0b249-f91d-4f4c-94c7-5eae88c88413",
+    "grade": 4.50
+  },
+  {
+    "studentId": "0b9dcd76-2d0a-49bb-82a9-1a33c1e4e0bd",
+    "subjectId": "61e4a01e-91b1-4c5a-887f-1c8c308b716b",
+    "grade": 5.75
+  },
+  {
+    "studentId": "0b9dcd76-2d0a-49bb-82a9-1a33c1e4e0bd",
+    "subjectId": "25a2b50e-f189-4c88-a528-b843a6715a6d",
+    "grade": 5.40
+  },
+  {
+    "studentId": "67f8c130-2b3c-4a61-b7c3-e2285cbe3a12",
+    "subjectId": "2b0fe149-d894-4658-9de5-8d69efbb6c64",
+    "grade": 4.60
+  },
+  {
+    "studentId": "bccf8762-4cf9-4e6c-8e4e-d1c3b091bdc3",
+    "subjectId": "5f27f3f3-3c3c-412a-9c3c-901f1c33a4d6",
+    "grade": 5.00
+  },
+  {
+    "studentId": "bccf8762-4cf9-4e6c-8e4e-d1c3b091bdc3",
     "subjectId": "9a91e7cc-df40-4e8e-9d09-7a4b4e2218c1",
-    "grade": 3.00
+    "grade": 4.50
+  },
+  {
+    "studentId": "df04b0cf-caf8-4e5d-b6b1-7c924d086123",
+    "subjectId": "25a2b50e-f189-4c88-a528-b843a6715a6d",
+    "grade": 4.00
+  },
+  {
+    "studentId": "a9f7e024-bbee-4d4d-8de7-b1d75b99d142",
+    "subjectId": "2b0fe149-d894-4658-9de5-8d69efbb6c64",
+    "grade": 6.00
+  },
+  {
+    "studentId": "a9f7e024-bbee-4d4d-8de7-b1d75b99d142",
+    "subjectId": "3d93c22c-2187-4bb1-81f4-c1fcd4a6c65b",
+    "grade": 5.85
   }
 ]

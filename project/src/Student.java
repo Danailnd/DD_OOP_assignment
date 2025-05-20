@@ -12,7 +12,6 @@ public class Student {
     private int group;
     private StudentStatus status;
     private double averageGrade;
-
     private final List<StudentSubject> enrolledSubjects = new ArrayList<>();
 
     public Student() {
@@ -29,14 +28,14 @@ public class Student {
         this.averageGrade = averageGrade;
     }
 
-    public void enrollInSubject(Subject subject) {
+    public void enrollInSubject(StudentSubject studentSubject) {
         for (StudentSubject ss : enrolledSubjects) {
-            if (ss.getSubject().equals(subject)) {
-                System.out.println("Already enrolled in: " + subject.getName());
+            if (ss.equals(studentSubject)) {
+                System.out.println("Already enrolled in: " + studentSubject.getStudent().getName());
                 return;
             }
         }
-        enrolledSubjects.add(new StudentSubject(this, subject, -1));
+        enrolledSubjects.add(studentSubject);
     }
 
     public void addGrade(Subject subject, float grade) {
@@ -49,28 +48,7 @@ public class Student {
         }
         System.out.println("Student is not enrolled in the subject: " + subject.getName());
     }
-
-    public List<StudentSubject> getPassedExams() {
-        List<StudentSubject> result = new ArrayList<>();
-        for (StudentSubject ss : enrolledSubjects) {
-            if (ss.getGrade() >= 3.0) {
-                result.add(ss);
-            }
-        }
-        return result;
-    }
-
-    public List<StudentSubject> getFailedOrNotTaken() {
-        List<StudentSubject> result = new ArrayList<>();
-        for (StudentSubject ss : enrolledSubjects) {
-            if (ss.getGrade() < 3.0) {
-                result.add(ss);
-            }
-        }
-        return result;
-    }
-
-    private void recalculateAverage() {
+    public void recalculateAverage() {
         if (enrolledSubjects.isEmpty()) {
             this.averageGrade = 0;
             return;
@@ -88,16 +66,6 @@ public class Student {
         }
 
         this.averageGrade = count == 0 ? 0 : total / count;
-    }
-
-    public void printAcademicTranscript() {
-        System.out.println("Академична справка за " + name + " :");
-        for (StudentSubject ss : enrolledSubjects) {
-            String gradeText = (ss.getGrade() >= 0) ? String.format("%.2f", ss.getGrade()) : "Не е взет";
-            System.out.println("- " + ss.getSubject().getName() + ": " + gradeText);
-        }
-
-        System.out.println("Среден успех: " + String.format("%.2f", averageGrade));
     }
 
 //    getters and setters
