@@ -1,0 +1,72 @@
+[
+  {
+    "id": "a1d2c3f4-b5e6-7890-1234-56789abcdef0",
+    "name": "Иван Петров",
+    "facultyNumber": "F12345",
+    "course": 2,
+    "specialtyId": "8c7b935e-b81b-4569-bffd-16e33f1ad9e2",
+    "group": 1,
+    "status": "ENROLLED",
+    "averageGrade": 5.25
+  },
+  {
+    "id": "0a0b0c0d-1e1f-2021-2223-242526272829",
+    "name": "Мария Георгиева",
+    "facultyNumber": "F67890",
+    "course": 3,
+    "specialtyId": "e42a6456-1761-4ef9-9c88-06d5d08802db",
+    "group": 2,
+    "status": "SUSPENDED",
+    "averageGrade": 4.75
+  },
+  {
+    "id": "0b9dcd76-2d0a-49bb-82a9-1a33c1e4e0bd",
+    "name": "Николай Тодоров",
+    "facultyNumber": "F54321",
+    "course": 4,
+    "specialtyId": "aa69b7a6-94c5-43e4-8235-4e1c0e4b94b1",
+    "group": 3,
+    "status": "ENROLLED",
+    "averageGrade": 5.60
+  },
+  {
+    "id": "67f8c130-2b3c-4a61-b7c3-e2285cbe3a12",
+    "name": "Елена Стоянова",
+    "facultyNumber": "F11223",
+    "course": 1,
+    "specialtyId": "e42a6456-1761-4ef9-9c88-06d5d08802db",
+    "group": 1,
+    "status": "ENROLLED",
+    "averageGrade": 4.30
+  },
+  {
+    "id": "bccf8762-4cf9-4e6c-8e4e-d1c3b091bdc3",
+    "name": "Георги Иванов",
+    "facultyNumber": "F33445",
+    "course": 3,
+    "specialtyId": "8c7b935e-b81b-4569-bffd-16e33f1ad9e2",
+    "group": 2,
+    "status": "ENROLLED",
+    "averageGrade": 4.95
+  },
+  {
+    "id": "df04b0cf-caf8-4e5d-b6b1-7c924d086123",
+    "name": "Росица Василева",
+    "facultyNumber": "F55667",
+    "course": 2,
+    "specialtyId": "aa69b7a6-94c5-43e4-8235-4e1c0e4b94b1",
+    "group": 1,
+    "status": "ENROLLED",
+    "averageGrade": 3.80
+  },
+  {
+    "id": "a9f7e024-bbee-4d4d-8de7-b1d75b99d142",
+    "name": "Теодора Димитрова",
+    "facultyNumber": "F77889",
+    "course": 4,
+    "specialtyId": "e42a6456-1761-4ef9-9c88-06d5d08802db",
+    "group": 3,
+    "status": "GRADUATED",
+    "averageGrade": 5.90
+  }
+]
