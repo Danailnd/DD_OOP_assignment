@@ -535,7 +535,7 @@ public class Main {
         }
 
         if (!missing.isEmpty()) {
-            System.out.println("\n Невзети (без оценка, броят се като 2.00):");
+            System.out.println("\n Невзети:");
             for (StudentSubject ss : missing) {
                 System.out.printf("• %s%n", ss.getSubject().getName());
             }
