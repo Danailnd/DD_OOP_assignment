@@ -269,7 +269,43 @@ public class Student {
                 .orElse(null);
     }
 
-//    getters and setters
+    public void enrollInSubject(String subjectName, List<StudentSubject> allStudentSubjects) {
+        if (this.getStatus() == StudentStatus.SUSPENDED) {
+            throw new IllegalStateException("Студентът е с прекъснато обучение и не може да записва дисциплини.");
+        }
+
+        if (this.getSpecialty() == null) {
+            throw new IllegalStateException("Студентът няма зададена специалност.");
+        }
+
+        Subject subject = this.getSpecialty().getCourses().stream()
+                .filter(s -> s.getName().equalsIgnoreCase(subjectName))
+                .findFirst()
+                .orElse(null);
+
+        if (subject == null) {
+            throw new IllegalArgumentException("Дисциплината не е част от специалността на студента.");
+        }
+
+        if (!subject.getAvailableYears().contains(this.getCourse())) {
+            throw new IllegalArgumentException("Дисциплината не се предлага за курс " + this.getCourse() + ".");
+        }
+
+        boolean alreadyEnrolled = allStudentSubjects.stream()
+                .anyMatch(ss -> ss.getStudent().equals(this) && ss.getSubject().equals(subject));
+
+        if (alreadyEnrolled) {
+            throw new IllegalStateException("Студентът вече е записан в тази дисциплина.");
+        }
+
+        StudentSubject newEnrollment = new StudentSubject(this, subject, -1);
+        allStudentSubjects.add(newEnrollment);
+        this.enrollInSubject(newEnrollment);
+
+        System.out.println("Успешно записване на дисциплината: " + subject.getName());
+    }
+
+    //    getters and setters
     public UUID getId(){
        return id;
     }

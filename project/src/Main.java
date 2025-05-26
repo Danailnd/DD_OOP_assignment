@@ -119,13 +119,6 @@ public class Main {
             System.out.println(e.getMessage());
         }
     }
-    private static void advance(int targetYear, Student student) {
-        try {
-            student.advanceToNextYear(targetYear, studentSubjects);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
     private static void graduateStudent() {
         System.out.print("Факултетен номер: ");
         String fn = scanner.nextLine().trim();
@@ -220,62 +213,31 @@ public class Main {
             System.out.println("Студент с този факултетен номер не е намерен.");
             return;
         }
-
-        advance(student.getCourse()+1,student);
+        try {
+            student.advanceToNextYear(student.getCourse()+1, studentSubjects);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
     private static void enrollStudentInSubject() {
         System.out.print("Факултетен номер: ");
         String fn = scanner.nextLine().trim();
 
-        Student student = students.stream()
-                .filter(s -> s.getFacultyNumber().equals(fn))
-                .findFirst()
-                .orElse(null);
+        Student student = Student.findByFacultyNumber(students, fn);
 
         if (student == null) {
             System.out.println("Студент с този факултетен номер не е намерен.");
             return;
         }
 
-        if (student.getStatus() == StudentStatus.SUSPENDED) {
-            System.out.println("Студентът е с прекъснато обучение и не може да записва дисциплини.");
-            return;
-        }
-
-        if (student.getSpecialty() == null) {
-            System.out.println("Студентът няма зададена специалност.");
-            return;
-        }
         System.out.print("Име на курс за прибавяне: ");
-        String courseName = scanner.nextLine().trim();
+        String subjectName = scanner.nextLine().trim();
 
-        Subject subject = student.getSpecialty().getCourses().stream()
-                .filter(s -> s.getName().equalsIgnoreCase(courseName))
-                .findFirst()
-                .orElse(null);
-
-        if (subject == null) {
-            System.out.println("Дисциплината не е част от специалността на студента.");
-            return;
+        try {
+            student.enrollInSubject(subjectName, studentSubjects);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-
-        if (!subject.getAvailableYears().contains(student.getCourse())) {
-            System.out.println("Дисциплината не се предлага за курс " + student.getCourse() + ".");
-            return;
-        }
-
-        boolean alreadyEnrolled = studentSubjects.stream()
-                .anyMatch(ss -> ss.getStudent().equals(student) && ss.getSubject().equals(subject));
-
-        if (alreadyEnrolled) {
-            System.out.println("Студентът вече е записан в тази дисциплина.");
-            return;
-        }
-
-        StudentSubject _studentSubject = new StudentSubject(student, subject, -1);
-        studentSubjects.add(_studentSubject);
-        student.enrollInSubject(_studentSubject);
-        System.out.println("Успешно записване на дисциплината: " + subject.getName());
     }
     private static void addGrade(){
         System.out.print("Факултетен номер: ");
