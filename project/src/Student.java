@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -116,7 +117,7 @@ public class Student {
      * @param students списък със студенти за записване
      * @param filePath път към файла, в който да се запишат данните
      */
-    static void saveToFile(List<Student> students, String filePath) {
+    static void saveToFile(List<Student> students, String filePath) throws IOException {
         List<StudentDTO> studentDTOs = students.stream()
                 .map(student -> {
                     StudentDTO dto = new StudentDTO();
