@@ -96,7 +96,7 @@ public class JsonDeserializeHelper {
                 }
 
                 StudentSubject ss = new StudentSubject(student, subject, dto.grade);
-                student.enrollInSubject(ss);
+                student.loadEnrollment(ss);
                 student.addGrade(subject, dto.grade);
 
                 result.add(ss);
