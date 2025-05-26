@@ -79,241 +79,118 @@ public class Main {
             System.out.println("Невалиден номер на група.");
             return;
         }
+
         System.out.print("Въведи име на студента: ");
         String name = scanner.nextLine().trim();
 
-        Specialty foundSpecialty = specialties.stream()
-                .filter(s -> s.getName().equalsIgnoreCase(programName))
-                .findFirst()
-                .orElse(null);
-
-        if (foundSpecialty == null) {
-            System.out.println("Специалност с име \"" + programName + "\" не е намерена.");
-            return;
+        try {
+            Student newStudent = Student.enroll(name, fn, programName, group, specialties);
+            students.add(newStudent);
+            System.out.println(
+                    "Успешно записан студент " + name +
+                            " в 1 курс на специалност " + programName +
+                            ", група " + group +
+                            ", ФН: " + fn
+            );
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
         }
-
-        Student newStudent = new Student();
-        newStudent.setId(java.util.UUID.randomUUID());
-        newStudent.setName(name);
-        newStudent.setFacultyNumber(fn);
-        newStudent.setSpecialty(foundSpecialty);
-        newStudent.setCourse(1);
-        newStudent.setGroup(group);
-        newStudent.setStatus(StudentStatus.ENROLLED);
-        newStudent.setAverageGrade(0.0);
-
-        students.add(newStudent);
-        System.out.printf("Успешно записан студент %s в 1 курс на специалност %s, група %d, ФН: %s%n",
-                name, programName, group, fn);
     }
     private static void changeStudent() {
         System.out.print("Факултетен номер на студента: ");
         String fn = scanner.nextLine().trim();
 
-        Student student = students.stream()
-                .filter(s -> s.getFacultyNumber().equalsIgnoreCase(fn))
-                .findFirst()
-                .orElse(null);
-
-        if (student == null) {
-            System.out.println("Студент с факултетен номер " + fn + " не е намерен.");
-            return;
-        }
-
-        if (student.getStatus() == StudentStatus.SUSPENDED) {
-            System.out.println("Операцията не е позволена. Студентът е със статус 'прекъснал'.");
-            return;
-        }
-
-        System.out.print("Опция за промяна (specialty, group, year): ");
-        String option = scanner.nextLine().trim().toLowerCase();
-
-        System.out.print("Нова стойност: ");
-        String value = scanner.nextLine().trim();
-
-        switch (option) {
-            case "group":
-                try {
-                    int newGroup = Integer.parseInt(value);
-                    student.setGroup(newGroup);
-                    System.out.println("Студентът е прехвърлен в група " + newGroup);
-                } catch (NumberFormatException e) {
-                    System.out.println("Невалиден номер на група.");
-                }
-                break;
-
-            case "year":
-                advance(Integer.parseInt(value), student);
-                break;
-
-            case "specialty":
-                Specialty newSpecialty = specialties.stream()
-                        .filter(s -> s.getName().equalsIgnoreCase(value))
-                        .findFirst()
-                        .orElse(null);
-
-                if (newSpecialty == null) {
-                    System.out.println("Специалност с име \"" + value + "\" не е намерена.");
-                    return;
-                }
-
-                int studentYear = student.getCourse();
-
-                List<Subject> requiredSubjects = newSpecialty.getCourses().stream()
-                        .filter(s -> s.isMandatory() &&
-                                s.getAvailableYears().stream().anyMatch(y -> y < studentYear))
-                        .toList();
-
-                boolean isFailingRequiredClass = requiredSubjects.stream()
-                        .anyMatch(subject -> studentSubjects.stream()
-                                .anyMatch(ss ->
-                                        ss.getStudent().equals(student) &&
-                                                ss.getSubject().equals(subject) &&
-                                                ss.getGrade() < 3.0));
-
-                if (!isFailingRequiredClass) {
-                    student.setSpecialty(newSpecialty);
-                    System.out.println("Студентът е прехвърлен в специалност " + newSpecialty.getName());
-                } else {
-                    System.out.println("Прехвърляне не е възможно. Студентът няма положени всички задължителни предмети от минали курсове на новата специалност.");
-                }
-                break;
-
-            default:
-                System.out.println("Невалидна опция. Избери една от следните: program, group, year.");
-        }
-    }
-    private static void advance(int targetYear, Student student){
-        try {
-            int currentYear = student.getCourse();
-
-            if (targetYear != currentYear + 1) {
-                System.out.println("Прехвърляне е разрешено само към следващ курс.");
-                return;
-            }
-
-            long failedMandatoryCourses = studentSubjects.stream()
-                    .filter(ss -> ss.getStudent().equals(student))
-                    .filter(ss -> ss.getSubject().isMandatory())
-                    .filter(ss -> ss.getSubject().getAvailableYears().stream().anyMatch(y -> y < targetYear))
-                    .filter(ss -> ss.getGrade() < 3.0)
-                    .count();
-
-            if (failedMandatoryCourses <= 2) {
-                student.setCourse(targetYear);
-                System.out.println("Студентът е прехвърлен в курс " + targetYear);
-            } else {
-                System.out.println("Прехвърляне не е възможно. Студентът има " + failedMandatoryCourses + " неположени задължителни предмета.");
-            }
-        } catch (Exception e) {
-            System.out.println("Невалиден курс.");
-        }
-    }
-    private static void graduateStudent(){
-        System.out.print("Факултетен номер: ");
-        String fn = scanner.nextLine().trim();
-
-        Student student = students.stream()
-                .filter(s -> s.getFacultyNumber().equals(fn))
-                .findFirst()
-                .orElse(null);
+        Student student = Student.findByFacultyNumber(students, fn);
 
         if (student == null) {
             System.out.println("Студент с този факултетен номер не е намерен.");
             return;
         }
 
-        List<StudentSubject> enrolledSubjects = studentSubjects.stream()
-                .filter(ss -> ss.getStudent().equals(student))
-                .toList();
+        System.out.print("Опция за промяна (specialty, group, year): ");
+        String option = scanner.nextLine().trim();
 
-        boolean allPassed = enrolledSubjects.stream()
-                .allMatch(ss -> ss.getGrade() >= 3.0);
+        System.out.print("Нова стойност: ");
+        String value = scanner.nextLine().trim();
 
-        if (!allPassed) {
-            System.out.println("Студентът не е положил успешно всички изпити.");
+        try {
+            student.applyChange(option, value, specialties, studentSubjects);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    private static void advance(int targetYear, Student student) {
+        try {
+            student.advanceToNextYear(targetYear, studentSubjects);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    private static void graduateStudent() {
+        System.out.print("Факултетен номер: ");
+        String fn = scanner.nextLine().trim();
+
+        Student student = Student.findByFacultyNumber(students, fn);
+
+        if (student == null) {
+            System.out.println("Студент с този факултетен номер не е намерен.");
             return;
         }
 
-        student.setStatus(StudentStatus.GRADUATED);
-        System.out.println("Студентът е успешно отбелязан като завършил.");
+        try {
+            student.graduate(studentSubjects);
+            System.out.println("Студентът е успешно отбелязан като завършил.");
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
     }
     private static void interruptStudent() {
         System.out.print("Факултетен номер: ");
         String fn = scanner.nextLine().trim();
 
-        Student student = students.stream()
-                .filter(s -> s.getFacultyNumber().equals(fn))
-                .findFirst()
-                .orElse(null);
+        Student student = Student.findByFacultyNumber(students, fn);
 
         if (student == null) {
             System.out.println("Студент с този факултетен номер не е намерен.");
             return;
         }
 
-        if(student.getStatus().equals(StudentStatus.SUSPENDED)){
-            System.out.println("Студентът вече е отбелязан като прекъснал.");
-            return;
+        try {
+            student.interrupt();
+            System.out.println("Студентът е успешно отбелязан като прекъснал.");
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
         }
-
-        if(student.getStatus().equals(StudentStatus.GRADUATED)){
-            System.out.println("Този студент вече е завършил.");
-            return;
-        }
-
-        student.setStatus(StudentStatus.SUSPENDED);
-        System.out.println("Студентът е успешно отбелязан като прекъснал.");
     }
-    private static void resumeStudent(){
+    private static void resumeStudent() {
         System.out.print("Факултетен номер: ");
         String fn = scanner.nextLine().trim();
 
-        Student student = students.stream()
-                .filter(s -> s.getFacultyNumber().equals(fn))
-                .findFirst()
-                .orElse(null);
+        Student student = Student.findByFacultyNumber(students, fn);
 
         if (student == null) {
             System.out.println("Студент с този факултетен номер не е намерен.");
             return;
         }
-
-        if(student.getStatus().equals(StudentStatus.ENROLLED)){
-            System.out.println("Студентът вече е отбелязан като записан.");
-            return;
+        try {
+            student.resume();
+            System.out.println("Студентът е успешно отбелязан като записан.");
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
         }
-
-        if(student.getStatus().equals(StudentStatus.GRADUATED)){
-            System.out.println("Този студент вече е завършил.");
-            return;
-        }
-
-        student.setStatus(StudentStatus.ENROLLED);
-        System.out.println("Студентът е успешно отбелязан като записан.");
     }
     private static void displayStudent() {
         System.out.print("Факултетен номер: ");
         String fn = scanner.nextLine().trim();
 
-        Student student = students.stream()
-                .filter(s -> s.getFacultyNumber().equals(fn))
-                .findFirst()
-                .orElse(null);
+        Student student = Student.findByFacultyNumber(students, fn);
 
         if (student == null) {
             System.out.println("Студент с този факултетен номер не е намерен.");
             return;
         }
-            System.out.printf("- Име: %s | Факултетен номер: %s | Специалност: %s | Курс: %d | Група: %d | Статус: %s | Среден успех: %.2f%n",
-                    student.getName(),
-                    student.getFacultyNumber(),
-                    (student.getSpecialty() != null ? student.getSpecialty().getName() : "Неизвестна"),
-                    student.getCourse(),
-                    student.getGroup(),
-                    student.getStatus(),
-                    student.getAverageGrade()
-            );
+
+        student.displayInfo();
     }
     private static void displayStudents() {
         if (students.isEmpty()) {
@@ -337,15 +214,13 @@ public class Main {
         System.out.print("Факултетен номер на студента: ");
         String fn = scanner.nextLine().trim();
 
-        Student student = students.stream()
-                .filter(s -> s.getFacultyNumber().equalsIgnoreCase(fn))
-                .findFirst()
-                .orElse(null);
+        Student student = Student.findByFacultyNumber(students, fn);
 
         if (student == null) {
-            System.out.println("Студент с факултетен номер " + fn + " не е намерен.");
+            System.out.println("Студент с този факултетен номер не е намерен.");
             return;
         }
+
         advance(student.getCourse()+1,student);
     }
     private static void enrollStudentInSubject() {
@@ -554,20 +429,6 @@ public class Main {
         studentSubjects = StudentSubject.loadFromUserInput(
                 studentSubjectsFilePath, students, specialties
         );
-    }
-    private static void displaySpecialties(){
-        if(specialties.isEmpty()){
-            System.out.println("Няма заредени специалности.");
-            return;
-        }
-        System.out.println("Списък на специалностите:");
-        for (Specialty sp : specialties) {
-            System.out.println("- " + sp.getName());
-            for (Subject subject : sp.getCourses()) {
-                System.out.printf("  * %s (Задължителен: %b, Възможни курсове: %s)%n",
-                        subject.getName(), subject.isMandatory(), subject.getAvailableYears());
-            }
-        }
     }
     private static void saveFile() {
         if (specialtiesFilePath == null || studentsFilePath == null || studentSubjectsFilePath == null) {
