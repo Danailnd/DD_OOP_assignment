@@ -328,58 +328,48 @@ public class Student {
     public String getName() {
         return name;
     }
-
     public String getFacultyNumber() {
         return facultyNumber;
     }
-
     public int getCourse() {
         return course;
     }
-
     public Specialty getSpecialty() {
         return specialty;
     }
-
     public int getGroup() {
         return group;
     }
-
     public StudentStatus getStatus() {
         return status;
     }
-
     public double getAverageGrade() {
         return averageGrade;
     }
-
+    public List<StudentSubject> getEnrolledSubjects() {
+        return enrolledSubjects;
+    }
     public void setId(UUID id) {
         this.id = id;
     }
     public void setName(String name) {
         this.name = name;
     }
-
     public void setFacultyNumber(String facultyNumber) {
         this.facultyNumber = facultyNumber;
     }
-
     public void setCourse(int course) {
         this.course = course;
     }
-
     public void setSpecialty(Specialty specialty) {
         this.specialty = specialty;
     }
-
     public void setGroup(int group) {
         this.group = group;
     }
-
     public void setStatus(StudentStatus status) {
         this.status = status;
     }
-
     public void setAverageGrade(double averageGrade) {
         this.averageGrade = averageGrade;
     }

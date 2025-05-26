@@ -22,8 +22,10 @@ public class Subject {
     public boolean isAvailableForYear(int year) {
         return availableYears.contains(year);
     }
-    public void printProtocol(List<StudentSubject> allStudentSubjects) {
-        List<StudentSubject> enrolledInCourse = allStudentSubjects.stream()
+    public void printProtocol(List<Student> allStudents) {
+        // Collect all StudentSubject enrollments for this subject from all students
+        List<StudentSubject> enrolledInCourse = allStudents.stream()
+                .flatMap(student -> student.getEnrolledSubjects().stream())
                 .filter(ss -> ss.getSubject().equals(this))
                 .toList();
 
@@ -57,12 +59,12 @@ public class Subject {
             }
         }
     }
-    public static Subject findByName(List<StudentSubject> allEnrollments, String name) {
-        if (allEnrollments == null || name == null) return null;
 
-        return allEnrollments.stream()
-                .map(StudentSubject::getSubject)
-                .filter(subject -> subject != null && subject.getName().equalsIgnoreCase(name))
+    public static Subject findByName(List<Subject> allSubjects, String name) {
+        if (allSubjects == null || name == null) return null;
+
+        return allSubjects.stream()
+                .filter(subject -> subject.getName().equalsIgnoreCase(name))
                 .findFirst()
                 .orElse(null);
     }

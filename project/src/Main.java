@@ -36,7 +36,8 @@ public class Main {
         System.out.println("14. Извади протокол за предмет (protocol)");
         System.out.println("15. Извади академична справка за уценката на студент (report)");
         System.out.println("16. Помощ");
-        System.out.println("17. Изход");
+        System.out.println("17. Бързо отваряне (за тестване)");
+        System.out.println("18. Изход");
     }
     private static void handleCommands(String command) {
         switch (command) {
@@ -56,8 +57,9 @@ public class Main {
             case "14": printProtocol(); break;
             case "15": printReport(); break;
             case "16": showHelp(); break;
-            case "17": exitApp(); break;
-            default: System.out.println("Невалидна команда. Избери число от 1–12.");
+            case "17": quickOpen(); break;
+            case "18": exitApp(); break;
+            default: System.out.println("Невалидна команда. Избери число от 1–18.");
         }
     }
     private static void enrollStudent() {
@@ -274,12 +276,16 @@ public class Main {
     private static void printProtocol() {
         System.out.print("Име на дисциплина: ");
         String courseName = scanner.nextLine().trim();
-        Subject subject = Subject.findByName(studentSubjects, courseName);
+
+        List<Subject> allSubjects = specialties.stream()
+                .flatMap(specialty -> specialty.getCourses().stream())
+                .toList();
+        Subject subject = Subject.findByName(allSubjects, courseName);
         if (subject == null) {
             System.out.println("Не е намерена дисциплина с име: " + courseName);
             return;
         }
-        subject.printProtocol(studentSubjects);
+        subject.printProtocol(students);
     }
     private static void printReport() {
         System.out.print("Факултетен номер: ");
@@ -294,7 +300,7 @@ public class Main {
     private static void openFile() {
         System.out.print("Път на файл с специалности: ");
         specialtiesFilePath = scanner.nextLine().trim();
-        List<Specialty> specialties = Specialty.loadFromUserInput(specialtiesFilePath);
+        specialties = Specialty.loadFromUserInput(specialtiesFilePath);
         System.out.print("Път на файл със студенти: ");
         studentsFilePath = scanner.nextLine().trim();
         students = Student.loadFromUserInput(studentsFilePath, specialties);
@@ -304,6 +310,20 @@ public class Main {
                 studentSubjectsFilePath, students, specialties
         );
     }
+    private static void quickOpen() {
+        specialtiesFilePath = "data/specialties.json";
+        studentsFilePath = "data/students.json";
+        studentSubjectsFilePath = "data/studentSubjects.json";
+
+        specialties = Specialty.loadFromUserInput(specialtiesFilePath);
+        students = Student.loadFromUserInput(studentsFilePath, specialties);
+        studentSubjects = StudentSubject.loadFromUserInput(studentSubjectsFilePath, students, specialties);
+
+        System.out.println("Данните са заредени от preset файлове:");
+        System.out.println(" - Специалности: " + specialtiesFilePath);
+        System.out.println(" - Студенти: " + studentsFilePath);
+        System.out.println(" - Студентски предмети: " + studentSubjectsFilePath);
+    }
     private static void saveFile() {
         if (specialtiesFilePath == null || studentsFilePath == null || studentSubjectsFilePath == null) {
             System.out.println("Не са намерени заредени файлове. Моля използвайте 'Запази като' за запазване в нова директория.");
@@ -312,7 +332,10 @@ public class Main {
         try {
             Specialty.saveToFile(specialties, specialtiesFilePath);
             Student.saveToFile(students, studentsFilePath);
-            StudentSubject.saveToFile(studentSubjects, studentSubjectsFilePath);
+            List<StudentSubject> allStudentSubjects = students.stream()
+                    .flatMap(student -> student.getEnrolledSubjects().stream())
+                    .collect(Collectors.toList());
+            StudentSubject.saveToFile(allStudentSubjects, studentSubjectsFilePath);
             System.out.println("Успешно записани всички данни.");
         } catch (RuntimeException e) {
             System.out.println("Възникна грешка при записването: " + e.getMessage());
