@@ -13,21 +13,18 @@ public class StudentSubject {
         this.subject = subject;
         this.grade = grade;
     }
-
     public static List<StudentSubject> loadFromUserInput(String filePath, List<Student> students, List<Specialty> specialties) {
         List<StudentSubject> loaded = loadFromFile(filePath, students, specialties);
         if (loaded == null) {
-            System.out.println("Неуспешно зареждане на студенти.");
+            System.out.println("Неуспешно зареждане на студентски предмети.");
         } else {
             System.out.println("Успешно заредени " + loaded.size() + " студенти.");
         }
         return loaded;
     }
-
     public static List<StudentSubject> loadFromFile(String path, List<Student> students, List<Specialty> specialties) {
         return JsonDeserializeHelper.loadStudentSubjectsFromFile(path, students, specialties);
     }
-
     static void saveToFile(List<StudentSubject> subjects, String filePath) {
         List<StudentSubjectDTO> dtoList = subjects.stream()
                 .map(ss -> {
@@ -43,7 +40,25 @@ public class StudentSubject {
             throw new RuntimeException("Грешка при записване на студентските предмети във файла: " + filePath);
         }
     }
+    public void assignGrade(float grade) {
+        if (grade < 2.0 || grade > 6.0) {
+            throw new IllegalArgumentException("Оценката трябва да е между 2.00 и 6.00.");
+        }
 
+        if (student.getStatus() == StudentStatus.SUSPENDED) {
+            throw new IllegalStateException("Студентът е прекъснал и не може да се явява на изпити.");
+        }
+
+        this.setGrade(grade);
+        this.student.recalculateAverage();
+    }
+    public static StudentSubject findByStudentAndSubjectName(List<StudentSubject> allSubjects, Student student, String subjectName) {
+        return allSubjects.stream()
+                .filter(ss -> ss.getStudent().equals(student) &&
+                        ss.getSubject().getName().equalsIgnoreCase(subjectName))
+                .findFirst()
+                .orElse(null);
+    }
     // Getters
     public UUID getId() {
         return id;

@@ -59,6 +59,12 @@ public class Specialty {
         }
     }
 
+    public Subject findSubjectByName(String subjectName) {
+        return courses.stream()
+                .filter(s -> s.getName().equalsIgnoreCase(subjectName))
+                .findFirst()
+                .orElse(null);
+    }
 
 //  Getters
     public UUID getId() {

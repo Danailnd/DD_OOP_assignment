@@ -28,16 +28,6 @@ public class Student {
         this.status = status;
         this.averageGrade = averageGrade;
     }
-
-    public void enrollInSubject(StudentSubject studentSubject) {
-        for (StudentSubject ss : enrolledSubjects) {
-            if (ss.equals(studentSubject)) {
-                System.out.println("Already enrolled in: " + studentSubject.getStudent().getName());
-                return;
-            }
-        }
-        enrolledSubjects.add(studentSubject);
-    }
     public void addGrade(Subject subject, float grade) {
         for (StudentSubject ss : enrolledSubjects) {
             if (ss.getSubject().equals(subject)) {
@@ -269,40 +259,38 @@ public class Student {
                 .orElse(null);
     }
 
-    public void enrollInSubject(String subjectName, List<StudentSubject> allStudentSubjects) {
-        if (this.getStatus() == StudentStatus.SUSPENDED) {
+    public void loadEnrollment(StudentSubject studentSubject) {
+        enrolledSubjects.add(studentSubject);
+    }
+    public StudentSubject enrollInSubject(StudentSubject studentSubject) {
+        if (status == StudentStatus.SUSPENDED) {
             throw new IllegalStateException("Студентът е с прекъснато обучение и не може да записва дисциплини.");
         }
 
-        if (this.getSpecialty() == null) {
+        if (specialty == null) {
             throw new IllegalStateException("Студентът няма зададена специалност.");
         }
 
-        Subject subject = this.getSpecialty().getCourses().stream()
-                .filter(s -> s.getName().equalsIgnoreCase(subjectName))
-                .findFirst()
-                .orElse(null);
+        Subject subject = studentSubject.getSubject();
 
-        if (subject == null) {
+        if (!specialty.getCourses().contains(subject)) {
             throw new IllegalArgumentException("Дисциплината не е част от специалността на студента.");
         }
 
-        if (!subject.getAvailableYears().contains(this.getCourse())) {
-            throw new IllegalArgumentException("Дисциплината не се предлага за курс " + this.getCourse() + ".");
+        if (!subject.getAvailableYears().contains(course)) {
+            throw new IllegalArgumentException("Дисциплината не се предлага за курс " + course + ".");
         }
 
-        boolean alreadyEnrolled = allStudentSubjects.stream()
-                .anyMatch(ss -> ss.getStudent().equals(this) && ss.getSubject().equals(subject));
+        boolean alreadyEnrolled = enrolledSubjects.stream()
+                .anyMatch(ss -> ss.getSubject().equals(subject));
 
         if (alreadyEnrolled) {
             throw new IllegalStateException("Студентът вече е записан в тази дисциплина.");
         }
 
-        StudentSubject newEnrollment = new StudentSubject(this, subject, -1);
-        allStudentSubjects.add(newEnrollment);
-        this.enrollInSubject(newEnrollment);
-
+        enrolledSubjects.add(studentSubject);
         System.out.println("Успешно записване на дисциплината: " + subject.getName());
+        return studentSubject;
     }
 
     //    getters and setters

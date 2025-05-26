@@ -9,9 +9,7 @@ public class Main {
     private static String studentSubjectsFilePath = null;
     private static List<Student> students = new ArrayList<>();
     private static List<Specialty> specialties = new ArrayList<>();
-
     private static List<StudentSubject> studentSubjects = new ArrayList<>();
-
     public static void main(String[] args) {
         while (running) {
             printCommands();
@@ -20,7 +18,6 @@ public class Main {
             handleCommands(input);
         }
     }
-
     private static void printCommands() {
         System.out.println("\n--- Меню за Управление на Студенти ---");
         System.out.println("1. Отвори файл (Open file)");
@@ -41,7 +38,6 @@ public class Main {
         System.out.println("16. Помощ");
         System.out.println("17. Изход");
     }
-
     private static void handleCommands(String command) {
         switch (command) {
             case "1": openFile(); break;
@@ -233,100 +229,59 @@ public class Main {
         System.out.print("Име на курс за прибавяне: ");
         String subjectName = scanner.nextLine().trim();
 
+        Subject subject = student.getSpecialty().findSubjectByName(subjectName);
+
+        if (subject == null) {
+            System.out.println("Дисциплината не е част от специалността на студента.");
+            return;
+        }
+        StudentSubject studentSubject = new StudentSubject(student, subject, -1);
         try {
-            student.enrollInSubject(subjectName, studentSubjects);
+            StudentSubject enrolled = student.enrollInSubject(studentSubject);
+            studentSubjects.add(enrolled);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-    private static void addGrade(){
+    private static void addGrade() {
         System.out.print("Факултетен номер: ");
         String fn = scanner.nextLine().trim();
 
-        Student student = students.stream()
-                .filter(s -> s.getFacultyNumber().equals(fn))
-                .findFirst()
-                .orElse(null);
-
+        Student student = Student.findByFacultyNumber(students, fn);
         if (student == null) {
             System.out.println("Студент с този факултетен номер не е намерен.");
             return;
         }
-        if (student.getStatus() == StudentStatus.SUSPENDED) {
-            System.out.println("Студентът е прекъснал и не може да се явява на изпити.");
-            return;
-        }
-
-        System.out.print("Оценка: ");
-        String gradeStr = scanner.nextLine().trim();
-        float grade;
-        try {
-            grade = Float.parseFloat(gradeStr);
-            if (grade < 2.0 || grade > 6.0) {
-                System.out.println("Оценката трябва да е между 2.00 и 6.00.");
-                return;
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("Невалидна стойност за оценка.");
-            return;
-        }
-
         System.out.print("Име на курс: ");
         String courseName = scanner.nextLine().trim();
 
-        StudentSubject enrollment = studentSubjects.stream()
-                .filter(ss -> ss.getStudent().equals(student) &&
-                        ss.getSubject().getName().equalsIgnoreCase(courseName))
-                .findFirst()
-                .orElse(null);
+        StudentSubject enrollment = StudentSubject.findByStudentAndSubjectName(studentSubjects, student, courseName);
 
         if (enrollment == null) {
             System.out.println("Студентът не е записан в дисциплината \"" + courseName + "\".");
             return;
         }
 
-        enrollment.setGrade(grade);
-       student.recalculateAverage();
-        System.out.println("Оценката е добавена успешно: " + courseName + " - " + grade);
+        System.out.print("Оценка: ");
+        try {
+            float grade = Float.parseFloat(scanner.nextLine().trim());
+            enrollment.assignGrade(grade);
+            System.out.println("Оценката е добавена успешно: " + courseName + " - " + grade);
+        } catch (NumberFormatException e) {
+            System.out.println("Невалидна стойност за оценка.");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
     private static void printProtocol() {
         System.out.print("Име на дисциплина: ");
         String courseName = scanner.nextLine().trim();
-
-        List<StudentSubject> enrolledInCourse = studentSubjects.stream()
-                .filter(ss -> ss.getSubject().getName().equalsIgnoreCase(courseName))
-                .toList();
-
-        if (enrolledInCourse.isEmpty()) {
-            System.out.println("Няма записани студенти в дисциплината \"" + courseName + "\".");
+        Subject subject = Subject.findByName(studentSubjects, courseName);
+        if (subject == null) {
+            System.out.println("Не е намерена дисциплина с име: " + courseName);
             return;
         }
-
-        Map<String, Map<Integer, List<StudentSubject>>> grouped =
-                enrolledInCourse.stream()
-                        .collect(Collectors.groupingBy(
-                                ss -> ss.getStudent().getSpecialty().getName(),
-                                Collectors.groupingBy(ss -> ss.getStudent().getCourse())
-                        ));
-
-        System.out.print("\n--- Протокол за дисциплина ---");
-        for (String specialty : grouped.keySet()) {
-            Map<Integer, List<StudentSubject>> byYear = grouped.get(specialty);
-            for (Integer year : byYear.keySet()) {
-                List<StudentSubject> list = byYear.get(year).stream()
-                        .sorted(Comparator.comparing(ss -> ss.getStudent().getFacultyNumber()))
-                        .toList();
-
-
-
-                for (StudentSubject ss : list) {
-                    Student s = ss.getStudent();
-                    String gradeStr = ss.getGrade() > 0 ? String.format("%.2f", ss.getGrade()) : "Няма оценка";
-                    System.out.printf("ФН: %s | Име: %s | Група: %d | Оценка: %s%n",
-                            s.getFacultyNumber(), s.getName(), s.getGroup(), gradeStr);
-                }
-            }
-        }
+        subject.printProtocol(studentSubjects);
     }
     private static void printReport() {
         System.out.print("Факултетен номер: ");
