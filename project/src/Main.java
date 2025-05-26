@@ -286,53 +286,12 @@ public class Main {
     private static void printReport() {
         System.out.print("Факултетен номер: ");
         String fn = scanner.nextLine().trim();
-
-        Student student = students.stream()
-                .filter(s -> s.getFacultyNumber().equals(fn))
-                .findFirst()
-                .orElse(null);
-
+        Student student = Student.findByFacultyNumber(students, fn);
         if (student == null) {
             System.out.println("Студент с този факултетен номер не е намерен.");
             return;
         }
-
-        List<StudentSubject> records = studentSubjects.stream()
-                .filter(ss -> ss.getStudent().equals(student))
-                .toList();
-
-        if (records.isEmpty()) {
-            System.out.println("Няма записани дисциплини за този студент.");
-            return;
-        }
-
-        List<StudentSubject> passed = new ArrayList<>();
-        List<StudentSubject> missing = new ArrayList<>();
-
-        for (StudentSubject ss : records) {
-            if (ss.getGrade() >= 3.0) {
-                passed.add(ss);
-            } else {
-                missing.add(ss);
-            }
-        }
-
-        System.out.println("\n--- Академична справка за " + student.getName() + " (ФН: " + fn + ") ---");
-
-        if (!passed.isEmpty()) {
-            System.out.println("\n Взети изпити:");
-            for (StudentSubject ss : passed) {
-                System.out.printf("• %s - %.2f%n", ss.getSubject().getName(), ss.getGrade());
-            }
-        }
-
-        if (!missing.isEmpty()) {
-            System.out.println("\n Невзети:");
-            for (StudentSubject ss : missing) {
-                System.out.printf("• %s%n", ss.getSubject().getName());
-            }
-        }
-        System.out.printf("%n Среден успех: %.2f%n", student.getAverageGrade());
+        student.printAcademicReport();
     }
     private static void openFile() {
         System.out.print("Път на файл с специалности: ");

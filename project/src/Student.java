@@ -239,7 +239,6 @@ public class Student {
 
         this.setStatus(StudentStatus.ENROLLED);
     }
-
     void displayInfo() {
         System.out.printf("- Име: %s | Факултетен номер: %s | Специалност: %s | Курс: %d | Група: %d | Статус: %s | Среден успех: %.2f%n",
                 this.getName(),
@@ -251,14 +250,12 @@ public class Student {
                 this.getAverageGrade()
         );
     }
-
     public static Student findByFacultyNumber(List<Student> students, String facultyNumber) {
         return students.stream()
                 .filter(s -> s.getFacultyNumber().equalsIgnoreCase(facultyNumber))
                 .findFirst()
                 .orElse(null);
     }
-
     public void loadEnrollment(StudentSubject studentSubject) {
         enrolledSubjects.add(studentSubject);
     }
@@ -291,6 +288,41 @@ public class Student {
         enrolledSubjects.add(studentSubject);
         System.out.println("Успешно записване на дисциплината: " + subject.getName());
         return studentSubject;
+    }
+    public void printAcademicReport() {
+        if (enrolledSubjects.isEmpty()) {
+            System.out.println("Няма записани дисциплини за този студент.");
+            return;
+        }
+
+        List<StudentSubject> passed = new ArrayList<>();
+        List<StudentSubject> missing = new ArrayList<>();
+
+        for (StudentSubject ss : enrolledSubjects) {
+            if (ss.getGrade() >= 3.0) {
+                passed.add(ss);
+            } else {
+                missing.add(ss);
+            }
+        }
+
+        System.out.println("\n--- Академична справка за " + name + " (ФН: " + facultyNumber + ") ---");
+
+        if (!passed.isEmpty()) {
+            System.out.println("\n Взети изпити:");
+            for (StudentSubject ss : passed) {
+                System.out.printf("• %s - %.2f%n", ss.getSubject().getName(), ss.getGrade());
+            }
+        }
+
+        if (!missing.isEmpty()) {
+            System.out.println("\n Невзети:");
+            for (StudentSubject ss : missing) {
+                System.out.printf("• %s%n", ss.getSubject().getName());
+            }
+        }
+
+        System.out.printf("%n Среден успех: %.2f%n", averageGrade);
     }
 
     //    getters and setters
