@@ -117,8 +117,7 @@ public class Student {
 
         return newStudent;
     }
-
-    public void applyChange(String option, String value, List<Specialty> allSpecialties, List<StudentSubject> allStudentSubjects) {
+    public void applyChange(String option, String value, List<Specialty> allSpecialties) {
         if (this.getStatus() == StudentStatus.SUSPENDED) {
             throw new IllegalStateException("Операцията не е позволена. Студентът е със статус 'прекъснал'.");
         }
@@ -162,12 +161,13 @@ public class Student {
                         .toList();
 
                 boolean isFailingRequiredClass = requiredSubjects.stream()
-                        .anyMatch(subject -> allStudentSubjects.stream()
-                                .anyMatch(ss ->
-                                        ss.getStudent().equals(this) &&
-                                                ss.getSubject().equals(subject) &&
-                                                ss.getGrade() < 3.0));
-
+                        .anyMatch(subject -> {
+                            return enrolledSubjects.stream()
+                                    .filter(ss -> ss.getSubject().equals(subject))
+                                    .findFirst()
+                                    .map(ss -> ss.getGrade() < 3.0)
+                                    .orElse(true);
+                        });
                 if (!isFailingRequiredClass) {
                     this.setSpecialty(newSpecialty);
                     System.out.println("Студентът е прехвърлен в специалност " + newSpecialty.getName());
@@ -180,33 +180,30 @@ public class Student {
                 throw new IllegalArgumentException("Невалидна опция. Избери една от следните: specialty, group, year.");
         }
     }
-
-    void advanceToNextYear(int targetYear, List<StudentSubject> allStudentSubjects) {
+    void advanceToNextYear() {
         int currentYear = this.getCourse();
+        int nextYear = currentYear + 1;
 
-        if (targetYear != currentYear + 1) {
-            throw new IllegalArgumentException("Прехвърляне е разрешено само към следващ курс.");
-        }
-
-        long failedMandatoryCourses = allStudentSubjects.stream()
-                .filter(ss -> ss.getStudent().equals(this))
+        long failedMandatoryCourses = enrolledSubjects.stream()
                 .filter(ss -> ss.getSubject().isMandatory())
-                .filter(ss -> ss.getSubject().getAvailableYears().stream().anyMatch(y -> y < targetYear))
+                .filter(ss -> ss.getSubject().getAvailableYears().stream().anyMatch(y -> y < nextYear))
                 .filter(ss -> ss.getGrade() < 3.0)
                 .count();
 
         if (failedMandatoryCourses <= 2) {
-            this.setCourse(targetYear);
-            System.out.println("Студентът е прехвърлен в курс " + targetYear);
+            this.setCourse(nextYear);
+            System.out.println("Студентът е прехвърлен в курс " + nextYear);
         } else {
             throw new IllegalStateException("Прехвърляне не е възможно. Студентът има " + failedMandatoryCourses + " неположени задължителни предмета.");
         }
     }
-    void graduate(List<StudentSubject> allSubjects) {
-        List<StudentSubject> enrolledSubjects = allSubjects.stream()
-                .filter(ss -> ss.getStudent().equals(this))
-                .toList();
-
+    public StudentSubject findEnrollmentBySubjectName(String subjectName) {
+        return enrolledSubjects.stream()
+                .filter(ss -> ss.getSubject().getName().equalsIgnoreCase(subjectName))
+                .findFirst()
+                .orElse(null);
+    }
+    void graduate() {
         boolean allPassed = enrolledSubjects.stream()
                 .allMatch(ss -> ss.getGrade() >= 3.0);
 
@@ -216,7 +213,6 @@ public class Student {
 
         this.setStatus(StudentStatus.GRADUATED);
     }
-
     void interrupt() {
         if (this.getStatus() == StudentStatus.SUSPENDED) {
             throw new RuntimeException("Студентът вече е отбелязан като прекъснал.");

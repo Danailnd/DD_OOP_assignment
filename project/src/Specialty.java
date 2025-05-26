@@ -42,7 +42,6 @@ public class Specialty {
     public static List<Specialty> loadFromFile(String path) {
         return JsonDeserializeHelper.loadSpecialtiesFromFile(path);
     }
-
     static void saveToFile(List<Specialty> specialties, String filePath) {
         List<SpecialtyDTO> dtoList = specialties.stream()
                 .map(specialty -> {
@@ -58,7 +57,6 @@ public class Specialty {
             throw new RuntimeException("Грешка при записване на специалностите във файла: " + filePath);
         }
     }
-
     public Subject findSubjectByName(String subjectName) {
         return courses.stream()
                 .filter(s -> s.getName().equalsIgnoreCase(subjectName))

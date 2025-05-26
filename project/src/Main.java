@@ -110,7 +110,7 @@ public class Main {
         String value = scanner.nextLine().trim();
 
         try {
-            student.applyChange(option, value, specialties, studentSubjects);
+            student.applyChange(option, value, specialties);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -127,7 +127,7 @@ public class Main {
         }
 
         try {
-            student.graduate(studentSubjects);
+            student.graduate();
             System.out.println("Студентът е успешно отбелязан като завършил.");
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
@@ -210,7 +210,7 @@ public class Main {
             return;
         }
         try {
-            student.advanceToNextYear(student.getCourse()+1, studentSubjects);
+            student.advanceToNextYear();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -225,7 +225,6 @@ public class Main {
             System.out.println("Студент с този факултетен номер не е намерен.");
             return;
         }
-
         System.out.print("Име на курс за прибавяне: ");
         String subjectName = scanner.nextLine().trim();
 
@@ -237,8 +236,7 @@ public class Main {
         }
         StudentSubject studentSubject = new StudentSubject(student, subject, -1);
         try {
-            StudentSubject enrolled = student.enrollInSubject(studentSubject);
-            studentSubjects.add(enrolled);
+            student.enrollInSubject(studentSubject);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -255,7 +253,7 @@ public class Main {
         System.out.print("Име на курс: ");
         String courseName = scanner.nextLine().trim();
 
-        StudentSubject enrollment = StudentSubject.findByStudentAndSubjectName(studentSubjects, student, courseName);
+        StudentSubject enrollment = student.findEnrollmentBySubjectName(courseName);
 
         if (enrollment == null) {
             System.out.println("Студентът не е записан в дисциплината \"" + courseName + "\".");

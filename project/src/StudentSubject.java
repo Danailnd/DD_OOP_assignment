@@ -52,13 +52,6 @@ public class StudentSubject {
         this.setGrade(grade);
         this.student.recalculateAverage();
     }
-    public static StudentSubject findByStudentAndSubjectName(List<StudentSubject> allSubjects, Student student, String subjectName) {
-        return allSubjects.stream()
-                .filter(ss -> ss.getStudent().equals(student) &&
-                        ss.getSubject().getName().equalsIgnoreCase(subjectName))
-                .findFirst()
-                .orElse(null);
-    }
     // Getters
     public UUID getId() {
         return id;
