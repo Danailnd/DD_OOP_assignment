@@ -29,6 +29,37 @@ public class Specialty {
         return result;
     }
 
+    public static List<Specialty> loadFromUserInput(String filePath) {
+        List<Specialty> loadedSpecialities = loadFromFile(filePath);
+        if (loadedSpecialities == null) {
+            System.out.println("Неуспешно зареждане на специалности.");
+        } else {
+            System.out.println("Успешно заредени " + loadedSpecialities.size() + " специалности.");
+        }
+        return loadedSpecialities;
+    }
+
+    public static List<Specialty> loadFromFile(String path) {
+        return JsonDeserializeHelper.loadSpecialtiesFromFile(path);
+    }
+
+    static void saveToFile(List<Specialty> specialties, String filePath) {
+        List<SpecialtyDTO> dtoList = specialties.stream()
+                .map(specialty -> {
+                    SpecialtyDTO dto = new SpecialtyDTO();
+                    dto.id = specialty.getId().toString();
+                    dto.name = specialty.getName();
+                    dto.courses = specialty.getCourses();
+                    return dto;
+                }).toList();
+
+        boolean success = JsonSerializeHelper.saveToFile(dtoList, filePath);
+        if (!success) {
+            throw new RuntimeException("Грешка при записване на специалностите във файла: " + filePath);
+        }
+    }
+
+
 //  Getters
     public UUID getId() {
         return id;

@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.UUID;
 
 public class StudentSubject {
@@ -11,6 +12,36 @@ public class StudentSubject {
         this.student = student;
         this.subject = subject;
         this.grade = grade;
+    }
+
+    public static List<StudentSubject> loadFromUserInput(String filePath, List<Student> students, List<Specialty> specialties) {
+        List<StudentSubject> loaded = loadFromFile(filePath, students, specialties);
+        if (loaded == null) {
+            System.out.println("Неуспешно зареждане на студенти.");
+        } else {
+            System.out.println("Успешно заредени " + loaded.size() + " студенти.");
+        }
+        return loaded;
+    }
+
+    public static List<StudentSubject> loadFromFile(String path, List<Student> students, List<Specialty> specialties) {
+        return JsonDeserializeHelper.loadStudentSubjectsFromFile(path, students, specialties);
+    }
+
+    static void saveToFile(List<StudentSubject> subjects, String filePath) {
+        List<StudentSubjectDTO> dtoList = subjects.stream()
+                .map(ss -> {
+                    StudentSubjectDTO dto = new StudentSubjectDTO();
+                    dto.studentId = ss.getStudent().getId().toString();
+                    dto.subjectId = ss.getSubject().getId().toString();
+                    dto.grade = ss.getGrade();
+                    return dto;
+                }).toList();
+
+        boolean success = JsonSerializeHelper.saveToFile(dtoList, filePath);
+        if (!success) {
+            throw new RuntimeException("Грешка при записване на студентските предмети във файла: " + filePath);
+        }
     }
 
     // Getters

@@ -545,35 +545,15 @@ public class Main {
     private static void openFile() {
         System.out.print("Път на файл с специалности: ");
         specialtiesFilePath = scanner.nextLine().trim();
-        List<Specialty> loaded = JsonDeserializeHelper.loadSpecialtiesFromFile(specialtiesFilePath);
-        if (loaded == null) {
-            System.out.println("Неуспешно зареждане на специалности.");
-        } else {
-            specialties = loaded;
-            System.out.println("Успешно заредени " + specialties.size() + " специалности.");
-        }
+        List<Specialty> specialties = Specialty.loadFromUserInput(specialtiesFilePath);
         System.out.print("Път на файл със студенти: ");
         studentsFilePath = scanner.nextLine().trim();
-        List<Student> loadedStudents = JsonDeserializeHelper.loadStudentsFromFile(studentsFilePath, specialties);
-
-        if (loadedStudents == null) {
-            System.out.println("Неуспешно зареждане на студенти.");
-        } else {
-            students = loadedStudents;
-            System.out.println("Успешно заредени " + students.size() + " студенти.");
-        }
+        students = Student.loadFromUserInput(studentsFilePath, specialties);
         System.out.print("Път на файл със студентски предмети: ");
         studentSubjectsFilePath = scanner.nextLine().trim();
-        studentSubjects = JsonDeserializeHelper.loadStudentSubjectsFromFile(
+        studentSubjects = StudentSubject.loadFromUserInput(
                 studentSubjectsFilePath, students, specialties
         );
-        System.out.println("Успешно заредени студентски предмета: " + (studentSubjects != null ? studentSubjects.size() : 0));
-
-        if (studentSubjects != null) {
-            for (Student student : students) {
-                student.recalculateAverage();
-            }
-        }
     }
     private static void displaySpecialties(){
         if(specialties.isEmpty()){
@@ -594,48 +574,13 @@ public class Main {
             System.out.println("Не са намерени заредени файлове. Моля използвайте 'Запази като' за запазване в нова директория.");
             return;
         }
-
-        // Convert to DTOs before saving
-        List<SpecialtyDTO> specialtyDTOs = specialties.stream()
-                .map(specialty -> {
-                    SpecialtyDTO dto = new SpecialtyDTO();
-                    dto.id = specialty.getId().toString();
-                    dto.name = specialty.getName();
-                    dto.courses = specialty.getCourses();
-                    return dto;
-                }).toList();
-
-        List<StudentDTO> studentDTOs = students.stream()
-                .map(student -> {
-                    StudentDTO dto = new StudentDTO();
-                    dto.id = student.getId().toString();
-                    dto.name = student.getName();
-                    dto.facultyNumber = student.getFacultyNumber();
-                    dto.course = student.getCourse();
-                    dto.specialtyId = student.getSpecialty().getId().toString();
-                    dto.group = student.getGroup();
-                    dto.status = student.getStatus().toString();
-                    dto.averageGrade = student.getAverageGrade();
-                    return dto;
-                }).toList();
-
-        List<StudentSubjectDTO> subjectDTOs = studentSubjects.stream()
-                .map(ss -> {
-                    StudentSubjectDTO dto = new StudentSubjectDTO();
-                    dto.studentId = ss.getStudent().getId().toString();
-                    dto.subjectId = ss.getSubject().getId().toString();
-                    dto.grade = (float) ss.getGrade();
-                    return dto;
-                }).toList();
-
-        boolean specialtiesSaved = JsonSerializeHelper.saveToFile(specialtyDTOs, specialtiesFilePath);
-        boolean studentsSaved = JsonSerializeHelper.saveToFile(studentDTOs, studentsFilePath);
-        boolean studentSubjectsSaved = JsonSerializeHelper.saveToFile(subjectDTOs, studentSubjectsFilePath);
-
-        if (specialtiesSaved && studentsSaved && studentSubjectsSaved) {
+        try {
+            Specialty.saveToFile(specialties, specialtiesFilePath);
+            Student.saveToFile(students, studentsFilePath);
+            StudentSubject.saveToFile(studentSubjects, studentSubjectsFilePath);
             System.out.println("Успешно записани всички данни.");
-        } else {
-            System.out.println("Възникна проблем при записване на един или повече файлове.");
+        } catch (RuntimeException e) {
+            System.out.println("Възникна грешка при записването: " + e.getMessage());
         }
     }
     private static void saveAs() {

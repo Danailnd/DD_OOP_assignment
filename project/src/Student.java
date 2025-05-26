@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.UUID;
 
 public class Student {
@@ -66,6 +67,41 @@ public class Student {
         }
 
         this.averageGrade = count == 0 ? 0 : total / count;
+    }
+
+    public static List<Student> loadFromUserInput(String filePath, List<Specialty> specialties) {
+        List<Student> loadedStudents = loadFromFile(filePath, specialties);
+        if (loadedStudents == null) {
+            System.out.println("Неуспешно зареждане на студенти.");
+        } else {
+            System.out.println("Успешно заредени " + loadedStudents.size() + " студенти.");
+        }
+        return loadedStudents;
+    }
+
+    public static List<Student> loadFromFile(String path, List<Specialty> specialties) {
+        return JsonDeserializeHelper.loadStudentsFromFile(path, specialties);
+    }
+
+    static void saveToFile(List<Student> students, String filePath) {
+        List<StudentDTO> studentDTOs = students.stream()
+                .map(student -> {
+                    StudentDTO dto = new StudentDTO();
+                    dto.id = student.getId().toString();
+                    dto.name = student.getName();
+                    dto.facultyNumber = student.getFacultyNumber();
+                    dto.course = student.getCourse();
+                    dto.specialtyId = student.getSpecialty().getId().toString();
+                    dto.group = student.getGroup();
+                    dto.status = student.getStatus().toString();
+                    dto.averageGrade = student.getAverageGrade();
+                    return dto;
+                }).toList();
+
+        boolean success = JsonSerializeHelper.saveToFile(studentDTOs, filePath);
+        if (!success) {
+            throw new RuntimeException("Грешка при записване на студентите във файла: " + filePath);
+        }
     }
 
 //    getters and setters
