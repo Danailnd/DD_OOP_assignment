@@ -1,6 +1,5 @@
 import java.util.*;
 import java.util.stream.Collectors;
-
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
     private static boolean running = true;
@@ -305,7 +304,7 @@ public class Main {
         students = Student.loadFromUserInput(studentsFilePath, specialties);
         System.out.print("Път на файл със студентски предмети: ");
         studentSubjectsFilePath = scanner.nextLine().trim();
-        studentSubjects = StudentSubject.loadFromUserInput(
+        StudentSubject.loadFromUserInput(
                 studentSubjectsFilePath, students, specialties
         );
     }
@@ -316,7 +315,7 @@ public class Main {
 
         specialties = Specialty.loadFromUserInput(specialtiesFilePath);
         students = Student.loadFromUserInput(studentsFilePath, specialties);
-        studentSubjects = StudentSubject.loadFromUserInput(studentSubjectsFilePath, students, specialties);
+        StudentSubject.loadFromUserInput(studentSubjectsFilePath, students, specialties);
 
         System.out.println("Данните са заредени от preset файлове:");
         System.out.println(" - Специалности: " + specialtiesFilePath);
