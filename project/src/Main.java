@@ -9,7 +9,6 @@ public class Main {
     private static String studentSubjectsFilePath = null;
     private static List<Student> students = new ArrayList<>();
     private static List<Specialty> specialties = new ArrayList<>();
-    private static List<StudentSubject> studentSubjects = new ArrayList<>();
     public static void main(String[] args) {
         while (running) {
             printCommands();
