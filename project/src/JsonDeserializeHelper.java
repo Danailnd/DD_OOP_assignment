@@ -11,10 +11,27 @@ import java.util.List;
 import java.lang.reflect.Type;
 import java.util.UUID;
 
+/**
+ * Помощен клас за десериализация на данни от JSON файлове.
+ * <p>
+ * Този клас предоставя методи за зареждане на специалности, студенти и студентски предмети
+ * от JSON файлове във вътрешните структури на приложението.
+ * </p>
+ *
+ * <p>Методите използват библиотеката Gson за конвертиране на JSON към Java обекти.</p>
+ *
+ * @author Данаил Димитров
+ */
 public class JsonDeserializeHelper {
 
     private static final Gson gson = new Gson();
 
+    /**
+     * Зарежда списък от специалности от JSON файл.
+     *
+     * @param path Път до JSON файла със специалности.
+     * @return Списък със специалности, или {@code null} при грешка.
+     */
     public static List<Specialty> loadSpecialtiesFromFile(String path) {
         try (FileReader reader = new FileReader(path)) {
             Type listType = new TypeToken<List<Specialty>>() {}.getType();
@@ -25,6 +42,13 @@ public class JsonDeserializeHelper {
         }
     }
 
+    /**
+     * Зарежда списък от студенти от JSON файл, като свързва всеки студент със съответната специалност.
+     *
+     * @param filePath Път до JSON файла със студенти.
+     * @param specialties Списък със специалности, използван за свързване.
+     * @return Списък със студенти, или {@code null} при грешка.
+     */
     public static List<Student> loadStudentsFromFile(String filePath, List<Specialty> specialties) {
         try (Reader reader = new FileReader(filePath)) {
             Gson gson = new Gson();
@@ -60,7 +84,14 @@ public class JsonDeserializeHelper {
             return null;
         }
     }
-
+    /**
+     * Зарежда списък от студентски предмети (StudentSubject) от JSON файл, като свързва студентите и предметите.
+     *
+     * @param filePath Път до JSON файла със студентски предмети.
+     * @param students Списък със студенти, използван за свързване.
+     * @param specialties Списък със специалности, използван за свързване на предмети.
+     * @return Списък със студентски предмети, или {@code null} при грешка.
+     */
     public static List<StudentSubject> loadStudentSubjectsFromFile(
             String filePath,
             List<Student> students,

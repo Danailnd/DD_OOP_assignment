@@ -1,5 +1,17 @@
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
+/**
+ * Главен клас, реализиращ интерактивно меню за управление на студентски данни.
+ * <p>
+ * Приложението позволява зареждане и запис на специалности, студенти и техните
+ * записвания в дисциплини чрез файлове. Потребителят може да добавя нови студенти,
+ * да променя техния статус, да ги записва в курсове, да въвежда оценки и да
+ * генерира отчети и протоколи.
+ * </p>
+ *
+ * @author Данаил Димитров
+ */
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
     private static boolean running = true;
@@ -337,6 +349,8 @@ public class Main {
             System.out.println("Успешно записани всички данни.");
         } catch (RuntimeException e) {
             System.out.println("Възникна грешка при записването: " + e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
     private static void saveAs() {
