@@ -65,7 +65,6 @@ public class JsonDeserializeHelper {
                 student.addGrade(subject, ss.getGrade());
             }
 
-            // Return the fully linked data
             DataStore store = new DataStore();
             store.specialties = bundle.specialties;
             store.students = bundle.students;
