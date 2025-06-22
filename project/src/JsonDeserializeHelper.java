@@ -44,7 +44,6 @@ public class JsonDeserializeHelper {
                 students.add(student);
             }
 
-            // Convert StudentSubjectDTO → StudentSubject
             List<StudentSubject> studentSubjects = new ArrayList<>();
             for (StudentSubjectDTO dto : bundle.studentSubjects) {
                 UUID studentId = UUID.fromString(dto.studentId);
@@ -77,7 +76,6 @@ public class JsonDeserializeHelper {
                 studentSubjects.add(ss);
             }
 
-            // Construct and return final DataStore
             DataStore store = new DataStore();
             store.specialties = bundle.specialties;
             store.students = students;
