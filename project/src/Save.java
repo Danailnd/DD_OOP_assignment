@@ -3,26 +3,17 @@ public class Save extends Operation {
     @Override
     public void execute(String[] args) {
         if (g_data_store == null) {
-            System.out.println("Няма отворени данни за запис.");
+            System.out.println("Няма заредени данни за запис.");
             return;
         }
 
-        String pathToSave;
-
-        if (args.length == 1) {
-            if (g_data_store.filePath == null) {
-                System.out.println("Файлът за запис не е указан. Използвайте: save <файл>");
-                return;
-            }
-            pathToSave = g_data_store.filePath;
-        } else {
-            pathToSave = args[1];
-            g_data_store.filePath = pathToSave;
+        if (g_data_store.filePath == null) {
+            System.out.println("Файлът не е указан. Използвайте 'saveas <име на файл>' за първоначално записване.");
+            return;
         }
-
-        boolean success = JsonSerializeHelper.saveToFile(g_data_store, pathToSave);
+        boolean success = JsonSerializeHelper.saveToFile(g_data_store, g_data_store.filePath);
         if (success) {
-            System.out.println("Данните са записани успешно в: " + pathToSave);
+            System.out.println("Данните са успешно записани в: " + g_data_store.filePath);
         } else {
             System.out.println("Грешка при запис на файла.");
         }

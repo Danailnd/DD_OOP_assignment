@@ -8,9 +8,13 @@ public class Main {
         cmd.put("open", (new Open()));
         cmd.put("close", (new Close()));
         cmd.put("save", (new Save()));
+        cmd.put("saveas", (new SaveAs()));
+        cmd.put("exit", (new Exit()));
+
 
         Scanner s = new Scanner(System.in);
-        while (true) {
+        Operation.setScanner(s);
+        while (!Operation.shouldExit) {
             System.out.print("> ");
             String input = s.nextLine();
             String[] arg = input.split("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
@@ -25,5 +29,7 @@ public class Main {
                 System.out.println(e.toString());
             }
         }
+        s.close();
+        System.out.println("Програмата приключи.");
     }
 }
