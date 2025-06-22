@@ -72,31 +72,7 @@ public class Specialty {
         }
         return result;
     }
-    /**
-     * Зарежда специалности от посочения файл.
-     * Ако зареждането е неуспешно, извежда съобщение за грешка.
-     *
-     * @param filePath Път към файла, от който се зареждат специалностите.
-     * @return Списък със заредените специалности, или null при неуспех.
-     */
-    public static List<Specialty> loadFromUserInput(String filePath) {
-        List<Specialty> loadedSpecialities = loadFromFile(filePath);
-        if (loadedSpecialities == null) {
-            System.out.println("Неуспешно зареждане на специалности.");
-        } else {
-            System.out.println("Успешно заредени " + loadedSpecialities.size() + " специалности.");
-        }
-        return loadedSpecialities;
-    }
-    /**
-     * Зарежда специалности от файл.
-     *
-     * @param path Път към файла.
-     * @return Списък със специалности или null при грешка.
-     */
-    public static List<Specialty> loadFromFile(String path) {
-        return JsonDeserializeHelper.loadSpecialtiesFromFile(path);
-    }
+
     /**
      * Записва списък от специалности във файл.
      * При неуспех хвърля RuntimeException.

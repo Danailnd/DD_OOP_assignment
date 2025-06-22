@@ -101,16 +101,16 @@ loadScripts(document, 'script');</script>
  <p>Пример за използване:</p>
  <pre>
      // Създаване на нова специалност
-     Specialty specialty = new Specialty("Компютърни науки");
+     Specialty specialty = new old.Specialty("Компютърни науки");
 
      // Добавяне на курс към специалността
-     specialty.addCourse(new Subject("Програмиране", true, List.of(1, 2)));
+     specialty.addCourse(new old.Subject("Програмиране", true, List.of(1, 2)));
 
      // Получаване на курсовете за първи курс
-     List&lt;Subject&gt; firstYearCourses = specialty.getCoursesForYear(1);
+     List&lt;old.Subject&gt; firstYearCourses = specialty.getCoursesForYear(1);
 
      // Зареждане на специалности от файл
-     List&lt;Specialty&gt; allSpecialties = Specialty.loadFromUserInput("specialties.json");
+     List&lt;old.Specialty&gt; allSpecialties = Specialty.loadFromUserInput("specialties.json");
 
      // Записване на специалности във файл
      Specialty.saveToFile(allSpecialties, "output.json");

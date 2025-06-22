@@ -93,25 +93,6 @@ public class Student {
         this.averageGrade = count == 0 ? 0 : total / count;
     }
     /**
-     * Зарежда списък с студенти от файл и списък със специалности.
-     *
-     * @param filePath    път към файла със студенти
-     * @param specialties списък със специалности
-     * @return списък със заредени студенти
-     */
-    public static List<Student> loadFromUserInput(String filePath, List<Specialty> specialties) {
-        List<Student> loadedStudents = loadFromFile(filePath, specialties);
-        if (loadedStudents == null) {
-            System.out.println("Неуспешно зареждане на студенти.");
-        } else {
-            System.out.println("Успешно заредени " + loadedStudents.size() + " студенти.");
-        }
-        return loadedStudents;
-    }
-    public static List<Student> loadFromFile(String path, List<Specialty> specialties) {
-        return JsonDeserializeHelper.loadStudentsFromFile(path, specialties);
-    }
-    /**
      * Записва списък със студенти във файл.
      *
      * @param students списък със студенти за записване

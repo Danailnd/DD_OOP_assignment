@@ -4,7 +4,6 @@ import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Помощен клас за сериализация на данни в JSON формат и записването им във файлове.
@@ -12,35 +11,42 @@ import java.util.List;
  * Използва библиотеката Gson за конвертиране на Java обекти в JSON с форматиран (pretty print) изход.
  * </p>
  *
- * <p>Методът предоставя възможност за запис на списък с данни във файл.</p>
- *
- * @author Данаил Димитров
+ * <p>Методите позволяват запис на цялостна структура от данни в един JSON файл.</p>
  */
 public class JsonSerializeHelper {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    /**
-     * Записва списък от данни във JSON файл на посочения път.
-     *
-     * @param <T> Типът на обектите в списъка.
-     * @param data Списък с данни за сериализация и запис.
-     * @param filePath Път до файла, в който ще се запишат данните.
-     * @return {@code true} ако записът е успешен, {@code false} при възникване на грешка.
-     *
-     * @throws IOException ако възникне грешка при записване във файла.
-     */
 
-    public static <T> boolean saveToFile(List<T> data, String filePath) throws IOException {
-        File file = new File(filePath);
-        File parent = file.getParentFile();
-        if (parent != null && !parent.exists()) {
-            System.out.println("Директорията не беше намерена: " + parent.getAbsolutePath());
+    /**
+     * Записва пълната структура от данни във JSON файл.
+     *
+     * @param store    Обект от тип DataStore, който съдържа всички данни.
+     * @param filePath Път до файла, в който ще се запишат данните.
+     * @return {@code true} ако записът е успешен, {@code false} при грешка.
+     */
+    public static boolean saveToFile(DataStore store, String filePath) {
+        if (filePath == null || filePath.isBlank()) {
+            System.out.println("Невалиден път до файл.");
             return false;
         }
 
-        try (FileWriter writer = new FileWriter(file)) {
-            gson.toJson(data, writer);
+        File file = new File(filePath);
+        File parent = file.getParentFile();
+        if (parent != null && !parent.exists()) {
+            System.out.println("Директорията не съществува: " + parent.getAbsolutePath());
+            return false;
         }
 
-        return true;
+        UniversityDTO dto = new UniversityDTO();
+        dto.specialties = store.specialties;
+        dto.students = store.students;
+        dto.studentSubjects = store.studentSubjects;
+
+        try (FileWriter writer = new FileWriter(file)) {
+            gson.toJson(dto, writer);
+            return true;
+        } catch (IOException e) {
+            System.out.println("Грешка при запис на файл: " + e.getMessage());
+            return false;
+        }
     }
 }

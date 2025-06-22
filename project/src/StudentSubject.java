@@ -39,34 +39,6 @@ public class StudentSubject {
         this.grade = grade;
     }
     /**
-     * Зарежда студентски предмети от потребителски вход (файл).
-     * Отпечатва резултат от операцията.
-     *
-     * @param filePath Път към файла за зареждане.
-     * @param students Списък от студенти, към които да се свържат записите.
-     * @param specialties Списък от специалности за проверка.
-     */
-    public static void loadFromUserInput(String filePath, List<Student> students, List<Specialty> specialties) {
-        List<StudentSubject> loaded = loadFromFile(filePath, students, specialties);
-        if (loaded == null) {
-            System.out.println("Неуспешно зареждане на студентски предмети.");
-        } else {
-            System.out.println("Успешно заредени " + loaded.size() + " студенти.");
-        }
-    }
-    /**
-     * Зарежда студентски предмети от JSON файл.
-     *
-     * @param path Път към JSON файла.
-     * @param students Списък от студенти за свързване на записите.
-     * @param specialties Списък от специалности за валидиране.
-     * @return Списък със студентски предмети или null при неуспех.
-     */
-    public static List<StudentSubject> loadFromFile(String path, List<Student> students, List<Specialty> specialties) {
-        return JsonDeserializeHelper.loadStudentSubjectsFromFile(path, students, specialties);
-    }
-
-    /**
      * Записва списък със студентски предмети във файл.
      *
      * @param subjects Списък със студентски предмети за запис.
