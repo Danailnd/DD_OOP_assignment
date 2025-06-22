@@ -23,30 +23,30 @@ public class JsonSerializeHelper {
      * @param filePath Път до файла, в който ще се запишат данните.
      * @return {@code true} ако записът е успешен, {@code false} при грешка.
      */
-    public static boolean saveToFile(DataStore store, String filePath) {
-        if (filePath == null || filePath.isBlank()) {
-            System.out.println("Невалиден път до файл.");
-            return false;
-        }
-
-        File file = new File(filePath);
-        File parent = file.getParentFile();
-        if (parent != null && !parent.exists()) {
-            System.out.println("Директорията не съществува: " + parent.getAbsolutePath());
-            return false;
-        }
-
-        UniversityDTO dto = new UniversityDTO();
-        dto.specialties = store.specialties;
-        dto.students = store.students;
-        dto.studentSubjects = store.studentSubjects;
-
-        try (FileWriter writer = new FileWriter(file)) {
-            gson.toJson(dto, writer);
-            return true;
-        } catch (IOException e) {
-            System.out.println("Грешка при запис на файл: " + e.getMessage());
-            return false;
-        }
-    }
+//    public static boolean saveToFile(DataStore store, String filePath) {
+//        if (filePath == null || filePath.isBlank()) {
+//            System.out.println("Невалиден път до файл.");
+//            return false;
+//        }
+//
+//        File file = new File(filePath);
+//        File parent = file.getParentFile();
+//        if (parent != null && !parent.exists()) {
+//            System.out.println("Директорията не съществува: " + parent.getAbsolutePath());
+//            return false;
+//        }
+//
+//        UniversityDTO dto = new UniversityDTO();
+//        dto.specialties = store.specialties;
+//        dto.students = store.students;
+//        dto.studentSubjects = store.studentSubjects;
+//
+//        try (FileWriter writer = new FileWriter(file)) {
+//            gson.toJson(dto, writer);
+//            return true;
+//        } catch (IOException e) {
+//            System.out.println("Грешка при запис на файл: " + e.getMessage());
+//            return false;
+//        }
+//    }
 }

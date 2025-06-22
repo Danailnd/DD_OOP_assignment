@@ -2,6 +2,6 @@ import java.util.List;
 
 public class UniversityDTO {
     public List<Specialty> specialties;
-    public List<Student> students;
-    public List<StudentSubject> studentSubjects;
+    public List<StudentDTO> students;
+    public List<StudentSubjectDTO> studentSubjects;
 }

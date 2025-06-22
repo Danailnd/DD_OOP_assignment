@@ -12,7 +12,7 @@ public class Open extends Operation {
         }
 
         try {
-            DataStore store = JsonDeserializeHelper.loadFromCombinedFile(fileName);
+            DataStore store = JsonDeserializeHelper.loadFromFile(fileName);
             if (store != null) {
                 store.filePath = fileName;
                 g_data_store = store;

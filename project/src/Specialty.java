@@ -74,29 +74,6 @@ public class Specialty {
     }
 
     /**
-     * Записва списък от специалности във файл.
-     * При неуспех хвърля RuntimeException.
-     *
-     * @param specialties Списък със специалности за запис.
-     * @param filePath Път към файла, в който да се запишат специалностите.
-     * @throws RuntimeException ако записът във файла се провали.
-     */
-    static void saveToFile(List<Specialty> specialties, String filePath) throws IOException {
-        List<SpecialtyDTO> dtoList = specialties.stream()
-                .map(specialty -> {
-                    SpecialtyDTO dto = new SpecialtyDTO();
-                    dto.id = specialty.getId().toString();
-                    dto.name = specialty.getName();
-                    dto.courses = specialty.getCourses();
-                    return dto;
-                }).toList();
-
-        boolean success = JsonSerializeHelper.saveToFile(dtoList, filePath);
-        if (!success) {
-            throw new RuntimeException("Грешка при записване на специалностите във файла: " + filePath);
-        }
-    }
-    /**
      * Търси дисциплина по име сред курсовете на специалността.
      *
      * @param subjectName Името на дисциплината.

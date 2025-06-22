@@ -38,28 +38,7 @@ public class StudentSubject {
         this.subject = subject;
         this.grade = grade;
     }
-    /**
-     * Записва списък със студентски предмети във файл.
-     *
-     * @param subjects Списък със студентски предмети за запис.
-     * @param filePath Път към файла за запис.
-     * @throws RuntimeException Ако възникне грешка при записването.
-     */
-    static void saveToFile(List<StudentSubject> subjects, String filePath) throws IOException {
-        List<StudentSubjectDTO> dtoList = subjects.stream()
-                .map(ss -> {
-                    StudentSubjectDTO dto = new StudentSubjectDTO();
-                    dto.studentId = ss.getStudent().getId().toString();
-                    dto.subjectId = ss.getSubject().getId().toString();
-                    dto.grade = ss.getGrade();
-                    return dto;
-                }).toList();
 
-        boolean success = JsonSerializeHelper.saveToFile(dtoList, filePath);
-        if (!success) {
-            throw new RuntimeException("Грешка при записване на студентските предмети във файла: " + filePath);
-        }
-    }
     /**
      * Задава оценка за студентския предмет.
      *
