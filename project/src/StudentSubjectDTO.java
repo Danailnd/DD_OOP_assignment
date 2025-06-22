@@ -19,4 +19,12 @@ public class StudentSubjectDTO {
     public String studentId;
     public String subjectId;
     public float grade;
+
+    public static StudentSubjectDTO from(StudentSubject ss) {
+        StudentSubjectDTO dto = new StudentSubjectDTO();
+        dto.studentId = ss.getStudent().getId().toString();
+        dto.subjectId = ss.getSubject().getId().toString();
+        dto.grade = ss.getGrade();
+        return dto;
+    }
 }
