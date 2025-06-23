@@ -1,5 +1,11 @@
 import java.util.List;
 
+/**
+ * Команда за извеждане на списък със студенти по специалност и курс.
+ *
+ * Употреба: printall <име_на_специалност> <номер_на_курс>
+ */
+
 public class PrintAll extends Operation {
 
     @Override

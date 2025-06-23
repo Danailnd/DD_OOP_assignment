@@ -1,3 +1,9 @@
+/**
+ * Команда за възстановяване на студент, който е прекъснал.
+ *
+ * Употреба: resume <факултетен_номер>
+ */
+
 public class Resume extends Operation {
 
     @Override

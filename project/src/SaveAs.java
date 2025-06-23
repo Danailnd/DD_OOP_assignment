@@ -1,3 +1,11 @@
+/**
+ * Команда за запазване на текущото хранилище в нов файл.
+ *
+ * Употреба: saveas <път_до_файл>
+ *
+ * След успешно запазване актуализира filePath в DataStore.
+ */
+
 public class SaveAs extends Operation {
 
     @Override

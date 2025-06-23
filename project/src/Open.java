@@ -1,6 +1,17 @@
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 
+/**
+ * Команда за отваряне на съществуващ файл с университетски данни или създаване на ново хранилище.
+ *
+ * Употреба:
+ * - open <път_до_файл>
+ * - open --new
+ *
+ * Ако се подаде "--new", създава празен обект DataStore.
+ * Ако се подаде име на файл, зарежда данните от него.
+ */
+
 public class Open extends Operation {
 
     private static void open(String fileName) {

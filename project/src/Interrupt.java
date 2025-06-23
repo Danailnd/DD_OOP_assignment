@@ -1,3 +1,11 @@
+/**
+ * Команда за отбелязване на студент като прекъснал.
+ *
+ * Употреба: interrupt <факултетен_номер>
+ *
+ * Прекъсналите не могат да полагат изпити или да се записват в нови дисциплини.
+ */
+
 public class Interrupt extends Operation {
     @Override
     public void execute(String[] args) {

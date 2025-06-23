@@ -22,8 +22,7 @@ public class Main {
         cmd.put("grade", new AddGrade());
         cmd.put("protocol", new Protocol());
         cmd.put("report", new Report());
-
-
+        cmd.put("help", new Help());
 
         Scanner s = new Scanner(System.in);
         Operation.setScanner(s);
