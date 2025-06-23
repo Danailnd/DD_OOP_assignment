@@ -10,6 +10,17 @@ public class Main {
         cmd.put("save", (new Save()));
         cmd.put("saveas", (new SaveAs()));
         cmd.put("exit", (new Exit()));
+        cmd.put("enroll", new Enroll());
+        cmd.put("change", new Change());
+        cmd.put("graduate", new Graduate());
+        cmd.put("interrupt", new Interrupt());
+        cmd.put("resume", new Resume());
+        cmd.put("advance", new Advance());
+        cmd.put("enrollsubj", new EnrollIn());
+        cmd.put("grade", new AddGrade());
+        cmd.put("protocol", new Protocol());
+        cmd.put("report", new Report());
+
 
 
         Scanner s = new Scanner(System.in);
