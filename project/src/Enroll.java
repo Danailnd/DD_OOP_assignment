@@ -15,27 +15,21 @@ public class Enroll extends Operation {
             System.out.println("Няма заредени данни.");
             return;
         }
-        if (args.length < 2) {
-            System.out.println("Употреба: enroll <факултетен номер>");
+        if (args.length < 5) {
+            System.out.println("Липсват аргументи. Очаква се: enroll <fn> <spec> <group> <name>");
             return;
         }
 
         String fn = args[1].trim();
-
-        System.out.print("Въведи име на специалност: ");
-        String programName = scanner.nextLine().trim();
-
-        System.out.print("Въведи номер на група: ");
+        String programName = args[2].trim();
         int group;
         try {
-            group = Integer.parseInt(scanner.nextLine().trim());
+        group = Integer.parseInt(args[3].trim());
         } catch (NumberFormatException e) {
             System.out.println("Невалиден номер на група.");
             return;
         }
-
-        System.out.print("Въведи име на студента: ");
-        String name = scanner.nextLine().trim();
+        String name = args[4].trim();
 
         try {
             Student newStudent = Student.enroll(name, fn, programName, group, g_data_store.specialties);

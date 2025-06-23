@@ -32,7 +32,7 @@ public class Main {
             String[] arg = input.split("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
             Operation action = cmd.get(arg[0]);
             if (action == null) {
-                System.out.println("Invalid command");
+                System.out.println("Невалидна команда.");
                 continue;
             }
             try {
