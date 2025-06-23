@@ -1,0 +1,241 @@
+{
+  "specialties": [
+    {
+      "id": "8c7b935e-b81b-4569-bffd-16e33f1ad9e2",
+      "name": "Компютърни науки",
+      "courses": [
+        {
+          "id": "5f27f3f3-3c3c-412a-9c3c-901f1c33a4d6",
+          "name": "Структури от данни",
+          "mandatory": true,
+          "availableYears": [2, 3]
+        },
+        {
+          "id": "9a91e7cc-df40-4e8e-9d09-7a4b4e2218c1",
+          "name": "Основи на изкуствения интелект",
+          "mandatory": false,
+          "availableYears": [3, 4]
+        },
+        {
+          "id": "d1f7be88-731f-4c19-bde7-95c8bc2e071b",
+          "name": "Алгоритми и структури от данни",
+          "mandatory": true,
+          "availableYears": [2]
+        },
+        {
+          "id": "0d0f31f4-2931-4ce6-bd92-3cd7b29a6e5b",
+          "name": "Машинно обучение",
+          "mandatory": false,
+          "availableYears": [4]
+        },
+        {
+          "id": "ab623820-1ad3-4972-a268-12a985981d1b",
+          "name": "Теория на изчисленията",
+          "mandatory": true,
+          "availableYears": [3]
+        }
+      ]
+    },
+    {
+      "id": "e42a6456-1761-4ef9-9c88-06d5d08802db",
+      "name": "Информационни системи",
+      "courses": [
+        {
+          "id": "2b0fe149-d894-4658-9de5-8d69efbb6c64",
+          "name": "Бази от данни",
+          "mandatory": true,
+          "availableYears": [2]
+        },
+        {
+          "id": "aae0b249-f91d-4f4c-94c7-5eae88c88413",
+          "name": "Уеб технологии",
+          "mandatory": false,
+          "availableYears": [2, 3]
+        },
+        {
+          "id": "6fdc64a5-c5c2-409c-a8a5-9b44cfdb672d",
+          "name": "Информационна сигурност",
+          "mandatory": true,
+          "availableYears": [3, 4]
+        },
+        {
+          "id": "3d93c22c-2187-4bb1-81f4-c1fcd4a6c65b",
+          "name": "Корпоративни информационни системи",
+          "mandatory": false,
+          "availableYears": [4]
+        },
+        {
+          "id": "f6437f35-0f11-4c63-b09d-6e11c4c4b679",
+          "name": "Проектиране на потребителски интерфейси",
+          "mandatory": false,
+          "availableYears": [2, 3]
+        }
+      ]
+    },
+    {
+      "id": "aa69b7a6-94c5-43e4-8235-4e1c0e4b94b1",
+      "name": "Софтуерно инженерство",
+      "courses": [
+        {
+          "id": "f12e8a01-d72f-4d45-9c8b-7f835c0110cc",
+          "name": "Софтуерни архитектури",
+          "mandatory": true,
+          "availableYears": [3]
+        },
+        {
+          "id": "61e4a01e-91b1-4c5a-887f-1c8c308b716b",
+          "name": "Тестове и осигуряване на качеството",
+          "mandatory": true,
+          "availableYears": [4]
+        },
+        {
+          "id": "8d7095e6-0b9c-4ce0-a3df-8aefc3926a77",
+          "name": "Agile методологии",
+          "mandatory": false,
+          "availableYears": [3]
+        },
+        {
+          "id": "df6bb8f4-410c-4c41-8cd7-59b68401df94",
+          "name": "Мобилни приложения",
+          "mandatory": false,
+          "availableYears": [4]
+        },
+        {
+          "id": "25a2b50e-f189-4c88-a528-b843a6715a6d",
+          "name": "Управление на софтуерни проекти",
+          "mandatory": true,
+          "availableYears": [3, 4]
+        }
+      ]
+    }
+  ],
+  "students":[
+    {
+      "id": "a1d2c3f4-b5e6-7890-1234-56789abcdef0",
+      "name": "Иван Петров",
+      "facultyNumber": "F12345",
+      "course": 2,
+      "specialtyId": "8c7b935e-b81b-4569-bffd-16e33f1ad9e2",
+      "group": 1,
+      "status": "ENROLLED",
+      "averageGrade": 5.25
+    },
+    {
+      "id": "0a0b0c0d-1e1f-2021-2223-242526272829",
+      "name": "Мария Георгиева",
+      "facultyNumber": "F67890",
+      "course": 3,
+      "specialtyId": "e42a6456-1761-4ef9-9c88-06d5d08802db",
+      "group": 2,
+      "status": "SUSPENDED",
+      "averageGrade": 4.75
+    },
+    {
+      "id": "0b9dcd76-2d0a-49bb-82a9-1a33c1e4e0bd",
+      "name": "Николай Тодоров",
+      "facultyNumber": "F54321",
+      "course": 4,
+      "specialtyId": "aa69b7a6-94c5-43e4-8235-4e1c0e4b94b1",
+      "group": 3,
+      "status": "ENROLLED",
+      "averageGrade": 5.60
+    },
+    {
+      "id": "67f8c130-2b3c-4a61-b7c3-e2285cbe3a12",
+      "name": "Елена Стоянова",
+      "facultyNumber": "F11223",
+      "course": 1,
+      "specialtyId": "e42a6456-1761-4ef9-9c88-06d5d08802db",
+      "group": 1,
+      "status": "ENROLLED",
+      "averageGrade": 4.30
+    },
+    {
+      "id": "bccf8762-4cf9-4e6c-8e4e-d1c3b091bdc3",
+      "name": "Георги Иванов",
+      "facultyNumber": "F33445",
+      "course": 3,
+      "specialtyId": "8c7b935e-b81b-4569-bffd-16e33f1ad9e2",
+      "group": 2,
+      "status": "ENROLLED",
+      "averageGrade": 4.95
+    },
+    {
+      "id": "df04b0cf-caf8-4e5d-b6b1-7c924d086123",
+      "name": "Росица Василева",
+      "facultyNumber": "F55667",
+      "course": 2,
+      "specialtyId": "aa69b7a6-94c5-43e4-8235-4e1c0e4b94b1",
+      "group": 1,
+      "status": "ENROLLED",
+      "averageGrade": 3.80
+    },
+    {
+      "id": "a9f7e024-bbee-4d4d-8de7-b1d75b99d142",
+      "name": "Теодора Димитрова",
+      "facultyNumber": "F77889",
+      "course": 4,
+      "specialtyId": "e42a6456-1761-4ef9-9c88-06d5d08802db",
+      "group": 3,
+      "status": "GRADUATED",
+      "averageGrade": 5.90
+    }
+  ],
+  "studentSubjects":[
+    {
+      "studentId": "a1d2c3f4-b5e6-7890-1234-56789abcdef0",
+      "subjectId": "5f27f3f3-3c3c-412a-9c3c-901f1c33a4d6",
+      "grade": 5.50
+    },
+    {
+      "studentId": "0a0b0c0d-1e1f-2021-2223-242526272829",
+      "subjectId": "2b0fe149-d894-4658-9de5-8d69efbb6c64",
+      "grade": 4.25
+    },
+    {
+      "studentId": "0a0b0c0d-1e1f-2021-2223-242526272829",
+      "subjectId": "aae0b249-f91d-4f4c-94c7-5eae88c88413",
+      "grade": 4.50
+    },
+    {
+      "studentId": "0b9dcd76-2d0a-49bb-82a9-1a33c1e4e0bd",
+      "subjectId": "61e4a01e-91b1-4c5a-887f-1c8c308b716b",
+      "grade": 5.75
+    },
+    {
+      "studentId": "0b9dcd76-2d0a-49bb-82a9-1a33c1e4e0bd",
+      "subjectId": "25a2b50e-f189-4c88-a528-b843a6715a6d",
+      "grade": 5.40
+    },
+    {
+      "studentId": "67f8c130-2b3c-4a61-b7c3-e2285cbe3a12",
+      "subjectId": "2b0fe149-d894-4658-9de5-8d69efbb6c64",
+      "grade": 4.60
+    },
+    {
+      "studentId": "bccf8762-4cf9-4e6c-8e4e-d1c3b091bdc3",
+      "subjectId": "5f27f3f3-3c3c-412a-9c3c-901f1c33a4d6",
+      "grade": 5.00
+    },
+    {
+      "studentId": "bccf8762-4cf9-4e6c-8e4e-d1c3b091bdc3",
+      "subjectId": "9a91e7cc-df40-4e8e-9d09-7a4b4e2218c1",
+      "grade": 4.50
+    },
+    {
+      "studentId": "df04b0cf-caf8-4e5d-b6b1-7c924d086123",
+      "subjectId": "25a2b50e-f189-4c88-a528-b843a6715a6d",
+      "grade": 4.00
+    },
+    {
+      "studentId": "a9f7e024-bbee-4d4d-8de7-b1d75b99d142",
+      "subjectId": "2b0fe149-d894-4658-9de5-8d69efbb6c64",
+      "grade": 6.00
+    },
+    {
+      "studentId": "a9f7e024-bbee-4d4d-8de7-b1d75b99d142",
+      "subjectId": "3d93c22c-2187-4bb1-81f4-c1fcd4a6c65b",
+      "grade": 5.85
+    }
+  ]
+}

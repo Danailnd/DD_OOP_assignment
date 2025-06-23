@@ -92,51 +92,7 @@ public class Student {
 
         this.averageGrade = count == 0 ? 0 : total / count;
     }
-    /**
-     * Зарежда списък с студенти от файл и списък със специалности.
-     *
-     * @param filePath    път към файла със студенти
-     * @param specialties списък със специалности
-     * @return списък със заредени студенти
-     */
-    public static List<Student> loadFromUserInput(String filePath, List<Specialty> specialties) {
-        List<Student> loadedStudents = loadFromFile(filePath, specialties);
-        if (loadedStudents == null) {
-            System.out.println("Неуспешно зареждане на студенти.");
-        } else {
-            System.out.println("Успешно заредени " + loadedStudents.size() + " студенти.");
-        }
-        return loadedStudents;
-    }
-    public static List<Student> loadFromFile(String path, List<Specialty> specialties) {
-        return JsonDeserializeHelper.loadStudentsFromFile(path, specialties);
-    }
-    /**
-     * Записва списък със студенти във файл.
-     *
-     * @param students списък със студенти за записване
-     * @param filePath път към файла, в който да се запишат данните
-     */
-    static void saveToFile(List<Student> students, String filePath) throws IOException {
-        List<StudentDTO> studentDTOs = students.stream()
-                .map(student -> {
-                    StudentDTO dto = new StudentDTO();
-                    dto.id = student.getId().toString();
-                    dto.name = student.getName();
-                    dto.facultyNumber = student.getFacultyNumber();
-                    dto.course = student.getCourse();
-                    dto.specialtyId = student.getSpecialty().getId().toString();
-                    dto.group = student.getGroup();
-                    dto.status = student.getStatus().toString();
-                    dto.averageGrade = student.getAverageGrade();
-                    return dto;
-                }).toList();
 
-        boolean success = JsonSerializeHelper.saveToFile(studentDTOs, filePath);
-        if (!success) {
-            throw new RuntimeException("Грешка при записване на студентите във файла: " + filePath);
-        }
-    }
     /**
      * Записва нов студент с подадените данни и специалност.
      *

@@ -72,54 +72,7 @@ public class Specialty {
         }
         return result;
     }
-    /**
-     * Зарежда специалности от посочения файл.
-     * Ако зареждането е неуспешно, извежда съобщение за грешка.
-     *
-     * @param filePath Път към файла, от който се зареждат специалностите.
-     * @return Списък със заредените специалности, или null при неуспех.
-     */
-    public static List<Specialty> loadFromUserInput(String filePath) {
-        List<Specialty> loadedSpecialities = loadFromFile(filePath);
-        if (loadedSpecialities == null) {
-            System.out.println("Неуспешно зареждане на специалности.");
-        } else {
-            System.out.println("Успешно заредени " + loadedSpecialities.size() + " специалности.");
-        }
-        return loadedSpecialities;
-    }
-    /**
-     * Зарежда специалности от файл.
-     *
-     * @param path Път към файла.
-     * @return Списък със специалности или null при грешка.
-     */
-    public static List<Specialty> loadFromFile(String path) {
-        return JsonDeserializeHelper.loadSpecialtiesFromFile(path);
-    }
-    /**
-     * Записва списък от специалности във файл.
-     * При неуспех хвърля RuntimeException.
-     *
-     * @param specialties Списък със специалности за запис.
-     * @param filePath Път към файла, в който да се запишат специалностите.
-     * @throws RuntimeException ако записът във файла се провали.
-     */
-    static void saveToFile(List<Specialty> specialties, String filePath) throws IOException {
-        List<SpecialtyDTO> dtoList = specialties.stream()
-                .map(specialty -> {
-                    SpecialtyDTO dto = new SpecialtyDTO();
-                    dto.id = specialty.getId().toString();
-                    dto.name = specialty.getName();
-                    dto.courses = specialty.getCourses();
-                    return dto;
-                }).toList();
 
-        boolean success = JsonSerializeHelper.saveToFile(dtoList, filePath);
-        if (!success) {
-            throw new RuntimeException("Грешка при записване на специалностите във файла: " + filePath);
-        }
-    }
     /**
      * Търси дисциплина по име сред курсовете на специалността.
      *

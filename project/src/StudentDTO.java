@@ -29,4 +29,16 @@ public class StudentDTO {
     public String status;
     public double averageGrade;
 
+    public static StudentDTO from(Student student) {
+        StudentDTO dto = new StudentDTO();
+        dto.id = student.getId().toString();
+        dto.name = student.getName();
+        dto.facultyNumber = student.getFacultyNumber();
+        dto.course = student.getCourse();
+        dto.group = student.getGroup();
+        dto.status = student.getStatus().name();
+        dto.averageGrade = student.getAverageGrade();
+        dto.specialtyId = student.getSpecialty().getId().toString();
+        return dto;
+    }
 }

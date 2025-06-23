@@ -100,10 +100,10 @@ loadScripts(document, 'script');</script>
  <p>Пример за използване:</p>
  <pre>
      // Създаване на нов студент
-     Student student = new Student("Иван Иванов", "12345", 2, specialty, 1, StudentStatus.ENROLLED, 4.5);
+     Student student = new old.Student("Иван Иванов", "12345", 2, specialty, 1, StudentStatus.ENROLLED, 4.5);
 
      // Записване на студент в предмет
-     student.enrollInSubject(new StudentSubject(student, subject));
+     student.enrollInSubject(new old.StudentSubject(student, subject));
 
      // Добавяне на оценка за предмет
      student.addGrade(subject, 5.0f);
