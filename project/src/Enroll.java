@@ -6,7 +6,6 @@
  * Създава студент в първи курс със зададените параметри и го добавя в хранилището.
  */
 
-
 public class Enroll extends Operation {
 
     @Override
