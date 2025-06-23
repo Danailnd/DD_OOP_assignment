@@ -6,7 +6,6 @@ public class Enroll extends Operation {
             System.out.println("Няма заредени данни.");
             return;
         }
-
         if (args.length < 2) {
             System.out.println("Употреба: enroll <факултетен номер>");
             return;

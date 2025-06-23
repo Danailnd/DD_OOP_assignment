@@ -14,9 +14,11 @@ public class Main {
         cmd.put("change", new Change());
         cmd.put("graduate", new Graduate());
         cmd.put("interrupt", new Interrupt());
+        cmd.put("print", new Print());
+        cmd.put("printall", new PrintAll());
         cmd.put("resume", new Resume());
         cmd.put("advance", new Advance());
-        cmd.put("enrollsubj", new EnrollIn());
+        cmd.put("enrollin", new EnrollIn());
         cmd.put("grade", new AddGrade());
         cmd.put("protocol", new Protocol());
         cmd.put("report", new Report());
